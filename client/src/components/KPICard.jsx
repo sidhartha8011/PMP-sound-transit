@@ -1,148 +1,86 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import {
+    TrendingUp, TrendingDown, Minus,
+    ClipboardCheck, FileText, Layers, MessageCircle, Package,
+    CheckCircle2, Clock, Shield, RefreshCw, BarChart3, HardHat,
+    Activity, Zap, PlayCircle, XCircle, Rocket,
+    Settings, Timer, Power, ListChecks, DollarSign, Bell, Building, Gauge
+} from 'lucide-react';
 
-const trendIcons = {
-    up: TrendingUp,
-    down: TrendingDown,
-    stable: Minus
+const trendIcons = { up: TrendingUp, down: TrendingDown, stable: Minus };
+
+const kpiIcons = {
+    ClipboardCheck, FileCheck: FileText, Building, Layers, MessageCircle, Package,
+    CheckCircle2, Clock, Shield, RefreshCw, BarChart3, HardHat,
+    Activity, Zap, PlayCircle, XCircle, Rocket,
+    Settings, Timer, Power, ListChecks, DollarSign, Bell, Gauge,
 };
 
-// Circular progress component
-function CircularProgress({ value, max, color, size = 60 }) {
-    const percentage = Math.min((value / max) * 100, 100);
-    const strokeWidth = 4;
-    const radius = (size - strokeWidth) / 2;
-    const circumference = radius * 2 * Math.PI;
-    const offset = circumference - (percentage / 100) * circumference;
-
-    return (
-        <svg width={size} height={size} className="transform -rotate-90">
-            {/* Background circle */}
-            <circle
-                cx={size / 2}
-                cy={size / 2}
-                r={radius}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={strokeWidth}
-                className="text-slate-200"
-            />
-            {/* Progress circle */}
-            <motion.circle
-                cx={size / 2}
-                cy={size / 2}
-                r={radius}
-                fill="none"
-                stroke={color}
-                strokeWidth={strokeWidth}
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                initial={{ strokeDashoffset: circumference }}
-                animate={{ strokeDashoffset: offset }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-            />
-        </svg>
-    );
-}
-
-export default function KPICard({ kpi, theme, delay = 0 }) {
-    const TrendIcon = trendIcons[kpi.trend] || Minus;
-    const statusColors = {
-        success: 'text-emerald-500 bg-emerald-50',
-        warning: 'text-amber-500 bg-amber-50',
-        danger: 'text-rose-500 bg-rose-50'
-    };
-
-    // Parse numeric values for progress
-    const numericValue = parseFloat(String(kpi.value).replace(/[^0-9.]/g, '')) || 0;
-    const numericTarget = parseFloat(String(kpi.target).replace(/[^0-9.]/g, '')) || 100;
-    const isPercentage = String(kpi.value).includes('%');
-    const progressMax = isPercentage ? 100 : numericTarget * 1.2;
+export default function KPICard({ kpi, color, index, iconMap }) {
+    const icons = iconMap || kpiIcons;
+    const Ic = icons[kpi.icon] || Activity;
+    const Trend = trendIcons[kpi.trend] || Minus;
+    const isUp = kpi.trend === 'up';
+    const isDown = kpi.trend === 'down';
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5, delay }}
-            whileHover={{
-                y: -4,
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
-                transition: { duration: 0.2 }
-            }}
-            className="glass-card group relative overflow-hidden"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.06 }}
+            className="kpi-card group relative"
         >
-            {/* Decorative gradient accent */}
+            {/* Top accent line */}
             <div
-                className="absolute top-0 right-0 w-24 h-24 opacity-10 blur-2xl"
-                style={{ background: theme.primary }}
+                className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl opacity-40 group-hover:opacity-100 transition-opacity"
+                style={{ background: `linear-gradient(90deg, ${color}, ${color}AA)` }}
             />
 
-            {/* Top row: Label + Trend */}
-            <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                    {kpi.label}
-                </p>
-                <motion.div
-                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusColors[kpi.status] || 'text-slate-500 bg-slate-100'}`}
-                    whileHover={{ scale: 1.05 }}
+            {/* Icon + Trend row */}
+            <div className="flex items-start justify-between mb-3">
+                <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ background: color + '12' }}
                 >
-                    <TrendIcon className="w-3 h-3" />
-                </motion.div>
-            </div>
-
-            {/* Value with animated counter effect */}
-            <div className="flex items-center gap-4">
-                {/* Progress ring for numeric values */}
-                {typeof numericValue === 'number' && numericValue > 0 && (
-                    <div className="relative">
-                        <CircularProgress
-                            value={numericValue}
-                            max={progressMax}
-                            color={theme.primary}
-                            size={56}
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-bold text-slate-600">
-                                {Math.round((numericValue / progressMax) * 100)}%
-                            </span>
-                        </div>
-                    </div>
-                )}
-
-                <div className="flex-1">
-                    <motion.p
-                        className={`text-3xl font-bold ${theme.text}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: delay + 0.2 }}
-                    >
-                        {kpi.value}
-                    </motion.p>
-
-                    {kpi.target && (
-                        <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                            Target: {kpi.target}
-                        </p>
-                    )}
+                    <Ic className="w-5 h-5" style={{ color }} />
+                </div>
+                <div
+                    className={`flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold ${isUp
+                            ? 'bg-emerald-50 text-emerald-600'
+                            : isDown
+                                ? 'bg-red-50 text-red-600'
+                                : 'bg-slate-50 text-slate-500'
+                        }`}
+                >
+                    <Trend className="w-3 h-3" />
+                    {kpi.trend === 'up' ? 'Up' : kpi.trend === 'down' ? 'Down' : 'Stable'}
                 </div>
             </div>
 
-            {/* Sparkline placeholder - subtle decoration */}
-            <div className="mt-4 flex items-end gap-0.5 h-6 opacity-30">
-                {[...Array(12)].map((_, i) => (
+            {/* Value */}
+            <p className="text-2xl font-extrabold text-slate-800 tracking-tight leading-none mb-1">
+                {kpi.value}
+            </p>
+
+            {/* Label */}
+            <p className="text-[11px] text-slate-400 font-medium mb-3 leading-tight">
+                {kpi.label}
+            </p>
+
+            {/* Target bar */}
+            <div className="flex items-center gap-2">
+                <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <motion.div
-                        key={i}
-                        className="flex-1 rounded-t"
-                        style={{
-                            backgroundColor: theme.primary,
-                            height: `${20 + Math.random() * 80}%`
-                        }}
-                        initial={{ scaleY: 0 }}
-                        animate={{ scaleY: 1 }}
-                        transition={{ duration: 0.5, delay: delay + 0.1 * i }}
+                        className="h-full rounded-full"
+                        style={{ background: color }}
+                        initial={{ width: 0 }}
+                        animate={{ width: '100%' }}
+                        transition={{ duration: 1, delay: 0.3 + index * 0.08 }}
                     />
-                ))}
+                </div>
+                <span className="text-[10px] text-slate-400 font-semibold whitespace-nowrap">
+                    Target: {kpi.target}
+                </span>
             </div>
         </motion.div>
     );

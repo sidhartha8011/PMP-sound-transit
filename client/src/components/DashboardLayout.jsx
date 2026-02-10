@@ -1,169 +1,215 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
+import { directors, toolItems } from '../data/dashboardData';
 import {
-    Cpu, LayoutDashboard, Briefcase, HardHat, Sparkles,
-    ChevronRight, Calendar, User, LogOut
+    Compass, HardHat, Building2, Wrench, Layers,
+    ChevronRight, CheckSquare, GitBranch, FileText, Bookmark,
+    LogOut, LayoutGrid, Activity
 } from 'lucide-react';
 import DirectorView from './DirectorView';
+import QPMOIntegratedView from './QPMOIntegratedView';
+import TasksView from './TasksView';
+import DecisionsView from './DecisionsView';
+import DocumentsView from './DocumentsView';
+import ResourcesView from './ResourcesView';
 
 const directorIcons = {
-    strategy: LayoutDashboard,
-    controls: Briefcase,
-    construction: HardHat,
-    qpmo: Sparkles
+    Compass, HardHat, Building2, Wrench, Layers,
+};
+
+const toolIcons = {
+    CheckSquare, GitBranch, FileText, Bookmark,
+};
+
+const TOOL_META = {
+    tasks: { title: 'Task Management', description: 'Track and manage quality program tasks across all projects', color: '#1E6BB8' },
+    decisions: { title: 'Decision Log', description: 'Track decisions, rationale, and stakeholder alignment', color: '#6A2586' },
+    documents: { title: 'Document Registry', description: 'Central repository for project documents, specs, and reports', color: '#2E8B57' },
+    resources: { title: 'Resource Allocation', description: 'Team utilization, skills, and project assignments', color: '#E8772E' },
+};
+
+const TOOL_VIEWS = {
+    tasks: TasksView,
+    decisions: DecisionsView,
+    documents: DocumentsView,
+    resources: ResourcesView,
 };
 
 export default function DashboardLayout({ initialDirectorId, onLogout }) {
-    const { theme } = useTheme();
-    const [directors, setDirectors] = useState([]);
-    const [activeDirectorId, setActiveDirectorId] = useState(initialDirectorId || 'strategy');
-    const [currentUser, setCurrentUser] = useState(null);
+    const { theme, setActiveTheme } = useTheme();
+    const [activeDirectorId, setActiveDirectorId] = useState(initialDirectorId || 'designQuality');
+    const [activeTool, setActiveTool] = useState(null);
 
-    useEffect(() => {
-        fetch('/api/dashboard/init')
-            .then(res => res.json())
-            .then(data => {
-                setDirectors(data.directors);
-                // Set logged-in director as current user
-                const loggedInDirector = data.directors.find(d => d.id === initialDirectorId);
-                if (loggedInDirector) {
-                    setCurrentUser({
-                        name: loggedInDirector.name,
-                        role: loggedInDirector.role
-                    });
-                }
-                if (initialDirectorId) {
-                    setActiveDirectorId(initialDirectorId);
-                }
-            })
-            .catch(console.error);
-    }, [initialDirectorId]);
+    const handleDirectorSelect = (directorId) => {
+        setActiveDirectorId(directorId);
+        setActiveTheme(directorId);
+        setActiveTool(null);
+    };
 
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
-    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const handleToolSelect = (toolId) => {
+        setActiveTool(toolId);
+    };
 
-    // Get logged-in director info for header
-    const loggedInDirector = directors.find(d => d.id === initialDirectorId);
-    const LoggedInIcon = loggedInDirector ? directorIcons[loggedInDirector.id] : User;
+    const activeDirector = directors.find(d => d.id === activeDirectorId);
+
+    // Sort directors so the active one is on top
+    const sortedDirectors = useMemo(() => {
+        const active = directors.find(d => d.id === activeDirectorId);
+        const rest = directors.filter(d => d.id !== activeDirectorId);
+        return active ? [active, ...rest] : directors;
+    }, [activeDirectorId]);
+
+    // Determine header info based on active view
+    const headerInfo = activeTool
+        ? { title: TOOL_META[activeTool].title, description: TOOL_META[activeTool].description, color: TOOL_META[activeTool].color }
+        : { title: activeDirector?.role || 'Dashboard', description: activeDirector?.description, color: activeDirector?.color.primary };
+
+    const ToolView = activeTool ? TOOL_VIEWS[activeTool] : null;
 
     return (
-        <div className="flex min-h-screen animated-bg relative overflow-hidden">
-            {/* Floating Orbs for ambient effect */}
-            <div className="floating-orb orb-cyan"></div>
-            <div className="floating-orb orb-purple"></div>
-            <div className="floating-orb orb-orange"></div>
-
-            {/* Sidebar */}
-            <aside className="w-72 glass-sidebar fixed left-0 top-0 bottom-0 flex flex-col p-6 z-50">
-                {/* Logo */}
-                <div className="flex items-center gap-3 mb-8">
-                    <div className={`p-2 rounded-xl bg-gradient-to-br ${theme.gradient}`}>
-                        <Cpu className="w-8 h-8 text-white" />
+        <div className="app-layout">
+            {/* ═══ LEFT Sidebar (Dark) ═══ */}
+            <aside className="left-sidebar">
+                {/* Brand */}
+                <div className="sidebar-brand">
+                    <div
+                        className="sidebar-brand-icon"
+                        style={{
+                            background: activeTool
+                                ? `linear-gradient(135deg, ${TOOL_META[activeTool].color}, ${TOOL_META[activeTool].color}dd)`
+                                : `linear-gradient(135deg, ${activeDirector?.color.primary}, ${activeDirector?.color.light})`
+                        }}
+                    >
+                        <LayoutGrid className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-slate-800 tracking-tight">Metro Transit</h1>
-                        <p className="text-xs text-slate-400 uppercase tracking-widest">QPMO Intelligence</p>
+                        <h2>QPMO</h2>
+                        <p>Intelligence</p>
                     </div>
                 </div>
 
-                {/* Navigation - logged-in director first */}
-                <nav className="flex-1 space-y-1">
-                    {[...directors].sort((a, b) => {
-                        if (a.id === initialDirectorId) return -1;
-                        if (b.id === initialDirectorId) return 1;
-                        return 0;
-                    }).map((director) => {
-                        const Icon = directorIcons[director.id] || LayoutDashboard;
-                        const isActive = activeDirectorId === director.id;
-                        const colorClass = director.pmiColor === '#00A5D9' ? 'from-[#00A5D9] to-[#0087B3]' :
-                            director.pmiColor === '#FF6A13' ? 'from-[#FF6A13] to-[#E55A00]' :
-                                'from-[#6A2586] to-[#521C68]';
+                {/* Dashboard Navigation */}
+                <div className="nav-section-label" style={{ color: '#64748b' }}>Dashboards</div>
+                <nav className="space-y-1 mb-1">
+                    <AnimatePresence mode="popLayout">
+                        {sortedDirectors.map((director) => {
+                            const Icon = directorIcons[director.icon] || Layers;
+                            const isActive = activeDirectorId === director.id && !activeTool;
 
+                            return (
+                                <motion.button
+                                    key={director.id}
+                                    layout
+                                    onClick={() => handleDirectorSelect(director.id)}
+                                    whileHover={{ x: 3 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    initial={{ opacity: 0, y: -4 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 4 }}
+                                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                                    className={`nav-item w-full text-left ${isActive ? 'active' : ''}`}
+                                    style={
+                                        isActive
+                                            ? { background: `linear-gradient(135deg, ${director.color.primary}, ${director.color.dark})` }
+                                            : {}
+                                    }
+                                >
+                                    <Icon className="w-4 h-4 flex-shrink-0" />
+                                    <span className="flex-1 text-[13px] leading-tight">{director.shortRole}</span>
+                                    {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-60" />}
+                                </motion.button>
+                            );
+                        })}
+                    </AnimatePresence>
+                </nav>
+
+                {/* Divider */}
+                <div className="nav-divider" />
+
+                {/* Tools Section */}
+                <div className="nav-section-label" style={{ color: '#64748b' }}>Tools</div>
+                <nav className="space-y-1">
+                    {toolItems.map((tool) => {
+                        const Icon = toolIcons[tool.icon] || FileText;
+                        const isActive = activeTool === tool.id;
+                        const meta = TOOL_META[tool.id];
                         return (
                             <motion.button
-                                key={director.id}
-                                onClick={() => setActiveDirectorId(director.id)}
-                                whileHover={{ x: 4 }}
-                                whileTap={{ scale: 0.98 }}
-                                className={`nav-item w-full text-left ${isActive ? `active bg-gradient-to-r ${colorClass}` : ''}`}
+                                key={tool.id}
+                                onClick={() => handleToolSelect(tool.id)}
+                                whileHover={{ x: 3 }}
+                                whileTap={{ scale: 0.97 }}
+                                className={`nav-item w-full text-left ${isActive ? 'active' : ''}`}
+                                style={isActive ? { background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)` } : {}}
                             >
-                                <Icon className="w-5 h-5" />
-                                <div className="flex-1">
-                                    <div className="font-medium text-sm">{director.name}</div>
-                                    <div className={`text-xs ${isActive ? 'text-white/70' : 'text-slate-400'}`}>{director.role}</div>
-                                </div>
-                                {isActive && <ChevronRight className="w-4 h-4" />}
+                                <Icon className="w-4 h-4 flex-shrink-0" />
+                                <span className="flex-1 text-[13px]">{tool.label}</span>
+                                {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-60" />}
                             </motion.button>
                         );
                     })}
                 </nav>
 
-                {/* Logout Button */}
+                {/* Spacer */}
+                <div className="flex-1" />
+
+                {/* Logout */}
                 <motion.button
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={onLogout}
-                    className="flex items-center gap-3 p-3 mt-4 rounded-xl bg-slate-100/70 hover:bg-slate-200/70 text-slate-600 transition-colors"
+                    className="flex items-center gap-2.5 p-3 mt-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors text-sm"
                 >
-                    <LogOut className="w-5 h-5" />
-                    <span className="font-medium text-sm">Sign Out</span>
+                    <LogOut className="w-4 h-4" />
+                    <span className="font-medium">Sign Out</span>
                 </motion.button>
 
                 {/* Footer */}
-                <div className="pt-4 mt-4 border-t border-slate-200/50">
-                    <div className="text-xs text-slate-400 text-center">
-                        Metro Transit Authority<br />
-                        © 2024 Capital Program
-                    </div>
+                <div className="pt-3 mt-3 border-t border-white/6">
+                    <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+                        Sound Transit Authority<br />
+                        © 2025 Capital Program
+                    </p>
                 </div>
             </aside>
 
-            {/* Main Content */}
-            <main className="flex-1 ml-72 p-8">
-                {/* Header with Director Tab */}
-                <header className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-800">Metro Transit QPMO</h1>
-                        <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-                            <Calendar className="w-4 h-4" />
-                            <span>{dateStr}</span>
-                            <span className="mx-2">•</span>
-                            <span>{timeStr}</span>
+            {/* ═══ Main Content ═══ */}
+            <main className="main-content">
+                {/* Header */}
+                {!activeTool && (
+                    <header className="dashboard-header">
+                        <div>
+                            <h1>{headerInfo.title}</h1>
+                            <p>{headerInfo.description}</p>
                         </div>
-                    </div>
-
-                    {/* Logged-in Director Tab */}
-                    {currentUser && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="flex items-center gap-3 glass-card py-2 px-4 cursor-pointer hover:shadow-lg transition-shadow"
-                            style={{
-                                borderLeft: `4px solid ${loggedInDirector?.pmiColor || '#6A2586'}`
-                            }}
+                        <div
+                            className="header-badge"
+                            style={{ background: `linear-gradient(135deg, ${activeDirector?.color.primary}, ${activeDirector?.color.dark})` }}
                         >
-                            <div
-                                className="w-10 h-10 rounded-full flex items-center justify-center"
-                                style={{
-                                    background: `linear-gradient(135deg, ${loggedInDirector?.pmiColor || '#6A2586'} 0%, ${loggedInDirector?.pmiColor || '#6A2586'}CC 100%)`
-                                }}
-                            >
-                                <LoggedInIcon className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                                <div className="font-medium text-sm text-slate-800">{currentUser.name}</div>
-                                <div className="text-xs text-slate-400">{currentUser.role}</div>
-                            </div>
-                        </motion.div>
-                    )}
-                </header>
+                            {activeDirector?.shortRole}
+                        </div>
+                    </header>
+                )}
 
-                {/* Director View */}
-                <DirectorView directorId={activeDirectorId} />
+                {/* View */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeTool || activeDirectorId}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -16 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {activeTool ? (
+                            <ToolView />
+                        ) : activeDirectorId === 'qpmoIntegrated' ? (
+                            <QPMOIntegratedView />
+                        ) : (
+                            <DirectorView directorId={activeDirectorId} />
+                        )}
+                    </motion.div>
+                </AnimatePresence>
             </main>
         </div>
     );

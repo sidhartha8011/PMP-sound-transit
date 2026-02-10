@@ -1,177 +1,187 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Users, HardHat, Sparkles, LayoutDashboard, ArrowRight, Shield } from 'lucide-react';
+import { directors } from '../data/dashboardData';
+import {
+    Compass, HardHat, Building2, Wrench, Layers,
+    ArrowRight, LayoutGrid
+} from 'lucide-react';
 
-const directors = [
-    {
-        id: 'strategy',
-        name: 'Alex Morgan',
-        role: 'Principal & Strategy Lead',
-        color: '#00A5D9',
-        gradient: 'from-[#00A5D9] to-[#0ea5e9]',
-        icon: LayoutDashboard,
-        description: 'Strategic Planning, Economic Development & Stakeholder Engagement'
-    },
-    {
-        id: 'controls',
-        name: 'Jordan Chen',
-        role: 'Project Controls Director',
-        color: '#6A2586',
-        gradient: 'from-[#6A2586] to-[#a855f7]',
-        icon: Users,
-        description: 'Cost Management, Scheduling & Risk Analysis'
-    },
-    {
-        id: 'construction',
-        name: 'Sam Williams',
-        role: 'Construction & Safety Director',
-        color: '#FF6A13',
-        gradient: 'from-[#FF6A13] to-[#f97316]',
-        icon: HardHat,
-        description: 'Field Operations, Safety Compliance & Quality Control'
-    },
-    {
-        id: 'qpmo',
-        name: 'Dr. Taylor Reed',
-        role: 'QPMO & Innovation Director',
-        color: '#6A2586',
-        gradient: 'from-[#6A2586] to-[#8b5cf6]',
-        icon: Sparkles,
-        description: 'Quality Assurance, Digital Transformation & Process Innovation'
-    }
-];
+const iconMap = { Compass, HardHat, Building2, Wrench, Layers };
 
 export default function LoginPage({ onLogin }) {
     const [hoveredCard, setHoveredCard] = useState(null);
 
     return (
-        <div className="min-h-screen animated-bg relative overflow-hidden flex items-center justify-center p-8">
-            {/* Floating Orbs */}
-            <div className="floating-orb orb-cyan"></div>
-            <div className="floating-orb orb-purple"></div>
-            <div className="floating-orb orb-orange"></div>
-
+        <div className="login-page flex items-center justify-center p-8">
             <div className="max-w-5xl w-full relative z-10">
                 {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: -30 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-12"
+                    transition={{ duration: 0.5 }}
+                    className="text-center mb-16"
                 >
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                        <div className="p-3 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 shadow-lg">
-                            <Shield className="w-10 h-10 text-white" />
+                    <motion.div
+                        className="flex items-center justify-center gap-3 mb-6"
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                    >
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-600 flex items-center justify-center shadow-xl">
+                            <LayoutGrid className="w-7 h-7 text-white" />
                         </div>
-                    </div>
-                    <h1 className="text-4xl font-bold text-slate-800 mb-2">
-                        Metro Transit Authority
+                    </motion.div>
+                    <h1 className="text-4xl font-extrabold text-slate-800 mb-3 tracking-tight">
+                        QPMO Intelligence
                     </h1>
-                    <p className="text-lg text-slate-500">
-                        QPMO Intelligence Dashboard
+                    <p className="text-base text-slate-500 font-medium">
+                        Sound Transit Capital Program
                     </p>
-                    <p className="text-sm text-slate-400 mt-2">
-                        Select your role to continue
+                    <p className="text-sm text-slate-400 mt-4 max-w-md mx-auto">
+                        Select your role to access the quality management dashboard
                     </p>
                 </motion.div>
 
-                {/* Director Cards */}
-                <div className="grid md:grid-cols-2 gap-6">
-                    {directors.map((director, index) => {
-                        const Icon = director.icon;
+                {/* Director Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                    {directors.filter(d => d.id !== 'qpmoIntegrated').map((director, index) => {
+                        const Icon = iconMap[director.icon] || Layers;
                         const isHovered = hoveredCard === director.id;
 
                         return (
                             <motion.button
                                 key={director.id}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 24 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                whileHover={{ scale: 1.03, y: -6 }}
+                                transition={{ duration: 0.4, delay: index * 0.08 }}
+                                whileHover={{ y: -8 }}
                                 whileTap={{ scale: 0.98 }}
                                 onMouseEnter={() => setHoveredCard(director.id)}
                                 onMouseLeave={() => setHoveredCard(null)}
                                 onClick={() => onLogin(director.id)}
-                                className="relative group"
+                                className="login-card text-left group"
+                                style={{
+                                    borderColor: isHovered ? director.color.primary + '30' : '#e8ecf0',
+                                    boxShadow: isHovered
+                                        ? `0 24px 48px -12px ${director.color.primary}20`
+                                        : '0 2px 8px rgba(0,0,0,0.04)',
+                                }}
                             >
-                                {/* Card */}
+                                {/* Color accent bar */}
                                 <div
-                                    className="relative p-8 rounded-2xl overflow-hidden transition-all duration-300 text-center"
+                                    className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl transition-all duration-300"
                                     style={{
-                                        background: isHovered
-                                            ? `linear-gradient(135deg, ${director.color} 0%, ${director.color}DD 100%)`
-                                            : 'rgba(255,255,255,0.8)',
-                                        backdropFilter: 'blur(24px)',
-                                        border: `1px solid ${isHovered ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.6)'}`,
-                                        boxShadow: isHovered
-                                            ? `0 25px 50px -12px ${director.color}40`
-                                            : '0 10px 40px -10px rgba(0,0,0,0.1)'
+                                        background: `linear-gradient(90deg, ${director.color.primary}, ${director.color.light})`,
+                                        opacity: isHovered ? 1 : 0.15,
                                     }}
-                                >
-                                    {/* Decorative circles */}
-                                    <div
-                                        className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-20 -translate-y-1/2 translate-x-1/4 transition-transform duration-300 group-hover:scale-125"
-                                        style={{ background: director.color }}
-                                    />
-                                    <div
-                                        className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-10 translate-y-1/2 -translate-x-1/4"
-                                        style={{ background: director.color }}
-                                    />
+                                />
 
-                                    <div className="relative z-10 flex flex-col items-center">
-                                        {/* Large Icon */}
-                                        <motion.div
-                                            className={`p-5 rounded-2xl mb-4 transition-all duration-300 ${isHovered
-                                                    ? 'bg-white/20'
-                                                    : `bg-gradient-to-br ${director.gradient}`
-                                                }`}
-                                            animate={{ scale: isHovered ? 1.1 : 1 }}
-                                        >
-                                            <Icon className={`w-12 h-12 ${isHovered ? 'text-white' : 'text-white'}`} />
-                                        </motion.div>
+                                <div className="relative z-10 flex items-start gap-4">
+                                    {/* Icon */}
+                                    <motion.div
+                                        className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300"
+                                        style={{
+                                            background: isHovered
+                                                ? `linear-gradient(135deg, ${director.color.primary}, ${director.color.light})`
+                                                : director.color.ultraLight,
+                                        }}
+                                        animate={{ scale: isHovered ? 1.08 : 1 }}
+                                    >
+                                        <Icon
+                                            className="w-6 h-6 transition-colors duration-300"
+                                            style={{ color: isHovered ? '#ffffff' : director.color.primary }}
+                                        />
+                                    </motion.div>
 
-                                        {/* Role Title - Large */}
-                                        <h3 className={`text-lg font-bold transition-colors duration-300 mb-1 ${isHovered ? 'text-white' : 'text-slate-800'
-                                            }`}>
+                                    <div className="flex-1">
+                                        <h3 className="text-[15px] font-bold text-slate-800 mb-1 leading-tight">
                                             {director.role}
                                         </h3>
-
-                                        {/* Name - Smaller */}
-                                        <p className={`text-sm transition-colors duration-300 ${isHovered ? 'text-white/80' : 'text-slate-500'
-                                            }`}>
-                                            {director.name}
-                                        </p>
-
-                                        {/* Description */}
-                                        <p className={`text-xs mt-3 transition-colors duration-300 max-w-[200px] ${isHovered ? 'text-white/70' : 'text-slate-400'
-                                            }`}>
+                                        <p className="text-xs text-slate-400 leading-relaxed">
                                             {director.description}
                                         </p>
-
-                                        {/* Arrow indicator */}
-                                        <motion.div
-                                            animate={{ y: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0.5 }}
-                                            className={`mt-4 transition-colors duration-300 ${isHovered ? 'text-white' : 'text-slate-300'
-                                                }`}
-                                        >
-                                            <ArrowRight className="w-5 h-5 rotate-90" />
-                                        </motion.div>
                                     </div>
+
+                                    {/* Arrow */}
+                                    <motion.div
+                                        animate={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0.25 }}
+                                        className="mt-2"
+                                    >
+                                        <ArrowRight className="w-4 h-4 text-slate-400" />
+                                    </motion.div>
                                 </div>
                             </motion.button>
                         );
                     })}
                 </div>
 
+                {/* QPMO Integrated Card - Full Width */}
+                {(() => {
+                    const qpmo = directors.find(d => d.id === 'qpmoIntegrated');
+                    const Icon = iconMap[qpmo.icon] || Layers;
+                    const isHovered = hoveredCard === qpmo.id;
+
+                    return (
+                        <motion.button
+                            initial={{ opacity: 0, y: 24 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.4 }}
+                            whileHover={{ y: -6 }}
+                            whileTap={{ scale: 0.99 }}
+                            onMouseEnter={() => setHoveredCard(qpmo.id)}
+                            onMouseLeave={() => setHoveredCard(null)}
+                            onClick={() => onLogin(qpmo.id)}
+                            className="login-card w-full text-left group"
+                            style={{
+                                borderColor: isHovered ? qpmo.color.primary + '30' : '#e8ecf0',
+                                boxShadow: isHovered
+                                    ? `0 24px 48px -12px ${qpmo.color.primary}20`
+                                    : '0 2px 8px rgba(0,0,0,0.04)',
+                            }}
+                        >
+                            <div
+                                className="absolute top-0 left-0 right-0 h-1 rounded-t-2xl transition-all duration-300"
+                                style={{
+                                    background: `linear-gradient(90deg, ${qpmo.color.primary}, ${qpmo.color.light})`,
+                                    opacity: isHovered ? 1 : 0.15,
+                                }}
+                            />
+                            <div className="relative z-10 flex items-center gap-4">
+                                <motion.div
+                                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300"
+                                    style={{
+                                        background: isHovered
+                                            ? `linear-gradient(135deg, ${qpmo.color.primary}, ${qpmo.color.light})`
+                                            : qpmo.color.ultraLight,
+                                    }}
+                                    animate={{ scale: isHovered ? 1.08 : 1 }}
+                                >
+                                    <Icon
+                                        className="w-6 h-6 transition-colors duration-300"
+                                        style={{ color: isHovered ? '#ffffff' : qpmo.color.primary }}
+                                    />
+                                </motion.div>
+                                <div className="flex-1">
+                                    <h3 className="text-[15px] font-bold text-slate-800 mb-0.5">{qpmo.role}</h3>
+                                    <p className="text-xs text-slate-400">{qpmo.description}</p>
+                                </div>
+                                <motion.div animate={{ x: isHovered ? 4 : 0, opacity: isHovered ? 1 : 0.25 }}>
+                                    <ArrowRight className="w-4 h-4 text-slate-400" />
+                                </motion.div>
+                            </div>
+                        </motion.button>
+                    );
+                })()}
+
                 {/* Footer */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                    className="text-center mt-12 text-sm text-slate-400"
+                    transition={{ delay: 0.6 }}
+                    className="text-center mt-12 text-xs text-slate-400"
                 >
-                    <p>Capital Program Management Office</p>
-                    <p className="mt-1">© 2024 Metro Transit Authority</p>
+                    <p className="font-medium">Sound Transit Authority · Capital Program Management Office</p>
+                    <p className="mt-1 text-slate-300">© 2025 QPMO System</p>
                 </motion.div>
             </div>
         </div>
