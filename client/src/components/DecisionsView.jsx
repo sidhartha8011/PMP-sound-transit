@@ -39,16 +39,16 @@ export default function DecisionsView() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-purple-500 to-purple-700" />
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-purple-500 to-purple-700 hidden sm:block" />
                 <div>
-                    <h1 className="text-xl font-bold text-slate-800">Decision Log</h1>
-                    <p className="text-sm text-slate-400">Track decisions, rationale, and stakeholder alignment</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Decision Log</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Track decisions, rationale, and stakeholder alignment</p>
                 </div>
             </motion.div>
 
             {/* Stats */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
                     { label: 'Total Decisions', value: stats.total, icon: GitBranch, color: '#6A2586' },
                     { label: 'Pending', value: stats.pending, icon: Clock, color: '#E8772E' },
@@ -71,7 +71,7 @@ export default function DecisionsView() {
             </motion.div>
 
             {/* Filters */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-2">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-slate-400 mr-1">Filter:</span>
                 {['all', 'pending', 'approved', 'deferred', 'rejected'].map(s => (
                     <button key={s} onClick={() => setFilterStatus(s)}
@@ -92,7 +92,7 @@ export default function DecisionsView() {
                             className="clean-card overflow-hidden">
                             {/* Main row */}
                             <button onClick={() => setExpandedId(isExpanded ? null : dec.id)}
-                                className="w-full p-5 flex items-center gap-4 text-left hover:bg-slate-50/50 transition-colors">
+                                className="w-full p-4 sm:p-5 flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-3 sm:gap-4 text-left hover:bg-slate-50/50 transition-colors">
                                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: cfg.dot + '15' }}>
                                     <StatusIcon className="w-4 h-4" style={{ color: cfg.dot }} />
                                 </div>

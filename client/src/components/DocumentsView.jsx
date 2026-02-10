@@ -42,11 +42,11 @@ export default function DocumentsView() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700" />
-                <div className="flex-1">
-                    <h1 className="text-xl font-bold text-slate-800">Document Registry</h1>
-                    <p className="text-sm text-slate-400">Central repository for project documents, specs, and reports</p>
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700 hidden sm:block" />
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Document Registry</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Central repository for project documents, specs, and reports</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-400 hover:bg-slate-50'}`}>
@@ -59,7 +59,7 @@ export default function DocumentsView() {
             </motion.div>
 
             {/* Stats */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
                     { label: 'Total Documents', value: stats.total, icon: FileText, color: '#2E8B57' },
                     { label: 'Pending Review', value: stats.pendingReview, icon: Clock, color: '#E8772E' },
@@ -84,13 +84,13 @@ export default function DocumentsView() {
             {/* Filters Row */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-3 flex-wrap">
                 {/* Search */}
-                <div className="relative flex-1 max-w-xs">
+                <div className="relative flex-1 min-w-[180px] max-w-xs">
                     <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input type="text" placeholder="Search documents..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
                         className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
                 </div>
                 {/* Category Tabs */}
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5 flex-wrap">
                     <button onClick={() => setActiveCategory('all')}
                         className={`text-[11px] font-medium px-3 py-1.5 rounded-full transition-all ${activeCategory === 'all' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
                         All
@@ -156,7 +156,7 @@ export default function DocumentsView() {
                     })}
                 </div>
             ) : (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="clean-card overflow-hidden">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="clean-card overflow-x-auto">
                     <table className="qpmo-table">
                         <thead>
                             <tr>

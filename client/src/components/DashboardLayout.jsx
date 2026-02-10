@@ -1,11 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { directors, toolItems } from '../data/dashboardData';
 import {
     Compass, HardHat, Building2, Wrench, Layers,
     ChevronRight, CheckSquare, GitBranch, FileText, Bookmark,
-    LogOut, LayoutGrid, Activity
+    LogOut, LayoutGrid, Activity, Menu, X
 } from 'lucide-react';
 import DirectorView from './DirectorView';
 import QPMOIntegratedView from './QPMOIntegratedView';
@@ -40,15 +40,27 @@ export default function DashboardLayout({ initialDirectorId, onLogout }) {
     const { theme, setActiveTheme } = useTheme();
     const [activeDirectorId, setActiveDirectorId] = useState(initialDirectorId || 'designQuality');
     const [activeTool, setActiveTool] = useState(null);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    // Close mobile menu on window resize above breakpoint
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 1024) setMobileMenuOpen(false);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const handleDirectorSelect = (directorId) => {
         setActiveDirectorId(directorId);
         setActiveTheme(directorId);
         setActiveTool(null);
+        setMobileMenuOpen(false);
     };
 
     const handleToolSelect = (toolId) => {
         setActiveTool(toolId);
+        setMobileMenuOpen(false);
     };
 
     const activeDirector = directors.find(d => d.id === activeDirectorId);
@@ -67,118 +79,174 @@ export default function DashboardLayout({ initialDirectorId, onLogout }) {
 
     const ToolView = activeTool ? TOOL_VIEWS[activeTool] : null;
 
-    return (
-        <div className="app-layout">
-            {/* ═══ LEFT Sidebar (Dark) ═══ */}
-            <aside className="left-sidebar">
-                {/* Brand */}
-                <div className="sidebar-brand">
-                    <div
-                        className="sidebar-brand-icon"
-                        style={{
-                            background: activeTool
-                                ? `linear-gradient(135deg, ${TOOL_META[activeTool].color}, ${TOOL_META[activeTool].color}dd)`
-                                : `linear-gradient(135deg, ${activeDirector?.color.primary}, ${activeDirector?.color.light})`
-                        }}
-                    >
-                        <LayoutGrid className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                        <h2>QPMO</h2>
-                        <p>Intelligence</p>
-                    </div>
+    // Current active label for mobile header
+    const mobileTitle = activeTool ? TOOL_META[activeTool].title : (activeDirector?.shortRole || 'Dashboard');
+
+    /* ─── Shared sidebar content ─── */
+    const sidebarContent = (
+        <>
+            {/* Brand */}
+            <div className="sidebar-brand">
+                <div
+                    className="sidebar-brand-icon"
+                    style={{
+                        background: activeTool
+                            ? `linear-gradient(135deg, ${TOOL_META[activeTool].color}, ${TOOL_META[activeTool].color}dd)`
+                            : `linear-gradient(135deg, ${activeDirector?.color.primary}, ${activeDirector?.color.light})`
+                    }}
+                >
+                    <LayoutGrid className="w-5 h-5 text-white" />
                 </div>
+                <div>
+                    <h2>QPMO</h2>
+                    <p>Intelligence</p>
+                </div>
+            </div>
 
-                {/* Dashboard Navigation */}
-                <div className="nav-section-label" style={{ color: '#64748b' }}>Dashboards</div>
-                <nav className="space-y-1 mb-1">
-                    <AnimatePresence mode="popLayout">
-                        {sortedDirectors.map((director) => {
-                            const Icon = directorIcons[director.icon] || Layers;
-                            const isActive = activeDirectorId === director.id && !activeTool;
-
-                            return (
-                                <motion.button
-                                    key={director.id}
-                                    layout
-                                    onClick={() => handleDirectorSelect(director.id)}
-                                    whileHover={{ x: 3 }}
-                                    whileTap={{ scale: 0.97 }}
-                                    initial={{ opacity: 0, y: -4 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 4 }}
-                                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                                    className={`nav-item w-full text-left ${isActive ? 'active' : ''}`}
-                                    style={
-                                        isActive
-                                            ? { background: `linear-gradient(135deg, ${director.color.primary}, ${director.color.dark})` }
-                                            : {}
-                                    }
-                                >
-                                    <Icon className="w-4 h-4 flex-shrink-0" />
-                                    <span className="flex-1 text-[13px] leading-tight">{director.shortRole}</span>
-                                    {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-60" />}
-                                </motion.button>
-                            );
-                        })}
-                    </AnimatePresence>
-                </nav>
-
-                {/* Divider */}
-                <div className="nav-divider" />
-
-                {/* Tools Section */}
-                <div className="nav-section-label" style={{ color: '#64748b' }}>Tools</div>
-                <nav className="space-y-1">
-                    {toolItems.map((tool) => {
-                        const Icon = toolIcons[tool.icon] || FileText;
-                        const isActive = activeTool === tool.id;
-                        const meta = TOOL_META[tool.id];
+            {/* Dashboard Navigation */}
+            <div className="nav-section-label" style={{ color: '#64748b' }}>Dashboards</div>
+            <nav className="space-y-1 mb-1">
+                <AnimatePresence mode="popLayout">
+                    {sortedDirectors.map((director) => {
+                        const Icon = directorIcons[director.icon] || Layers;
+                        const isActive = activeDirectorId === director.id && !activeTool;
                         return (
                             <motion.button
-                                key={tool.id}
-                                onClick={() => handleToolSelect(tool.id)}
+                                key={director.id}
+                                layout
+                                onClick={() => handleDirectorSelect(director.id)}
                                 whileHover={{ x: 3 }}
                                 whileTap={{ scale: 0.97 }}
+                                initial={{ opacity: 0, y: -4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 4 }}
+                                transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                 className={`nav-item w-full text-left ${isActive ? 'active' : ''}`}
-                                style={isActive ? { background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)` } : {}}
+                                style={isActive ? { background: `linear-gradient(135deg, ${director.color.primary}, ${director.color.dark})` } : {}}
                             >
                                 <Icon className="w-4 h-4 flex-shrink-0" />
-                                <span className="flex-1 text-[13px]">{tool.label}</span>
+                                <span className="flex-1 text-[13px] leading-tight">{director.shortRole}</span>
                                 {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-60" />}
                             </motion.button>
                         );
                     })}
-                </nav>
+                </AnimatePresence>
+            </nav>
 
-                {/* Spacer */}
-                <div className="flex-1" />
+            {/* Divider */}
+            <div className="nav-divider" />
 
-                {/* Logout */}
-                <motion.button
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={onLogout}
-                    className="flex items-center gap-2.5 p-3 mt-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors text-sm"
-                >
-                    <LogOut className="w-4 h-4" />
-                    <span className="font-medium">Sign Out</span>
-                </motion.button>
+            {/* Tools Section */}
+            <div className="nav-section-label" style={{ color: '#64748b' }}>Tools</div>
+            <nav className="space-y-1">
+                {toolItems.map((tool) => {
+                    const Icon = toolIcons[tool.icon] || FileText;
+                    const isActive = activeTool === tool.id;
+                    const meta = TOOL_META[tool.id];
+                    return (
+                        <motion.button
+                            key={tool.id}
+                            onClick={() => handleToolSelect(tool.id)}
+                            whileHover={{ x: 3 }}
+                            whileTap={{ scale: 0.97 }}
+                            className={`nav-item w-full text-left ${isActive ? 'active' : ''}`}
+                            style={isActive ? { background: `linear-gradient(135deg, ${meta.color}, ${meta.color}cc)` } : {}}
+                        >
+                            <Icon className="w-4 h-4 flex-shrink-0" />
+                            <span className="flex-1 text-[13px]">{tool.label}</span>
+                            {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-60" />}
+                        </motion.button>
+                    );
+                })}
+            </nav>
 
-                {/* Footer */}
-                <div className="pt-3 mt-3 border-t border-white/6">
-                    <p className="text-[10px] text-slate-500 text-center leading-relaxed">
-                        Sound Transit Authority<br />
-                        © 2025 Capital Program
-                    </p>
-                </div>
+            {/* Spacer */}
+            <div className="flex-1" />
+
+            {/* Logout */}
+            <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={onLogout}
+                className="flex items-center gap-2.5 p-3 mt-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors text-sm"
+            >
+                <LogOut className="w-4 h-4" />
+                <span className="font-medium">Sign Out</span>
+            </motion.button>
+
+            {/* Footer */}
+            <div className="pt-3 mt-3 border-t border-white/6">
+                <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+                    Sound Transit Authority<br />
+                    © 2025 Capital Program
+                </p>
+            </div>
+        </>
+    );
+
+    return (
+        <div className="app-layout">
+            {/* ═══ Desktop Sidebar ═══ */}
+            <aside className="left-sidebar desktop-sidebar">
+                {sidebarContent}
             </aside>
+
+            {/* ═══ Mobile Overlay Drawer ═══ */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            className="mobile-backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setMobileMenuOpen(false)}
+                        />
+                        {/* Drawer */}
+                        <motion.aside
+                            className="left-sidebar mobile-drawer"
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                        >
+                            {/* Close button */}
+                            <button
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="mobile-drawer-close"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+
+                            {sidebarContent}
+                        </motion.aside>
+                    </>
+                )}
+            </AnimatePresence>
 
             {/* ═══ Main Content ═══ */}
             <main className="main-content">
-                {/* Header */}
+                {/* Mobile Header Bar */}
+                <div className="mobile-header">
+                    <button
+                        className="mobile-menu-btn"
+                        onClick={() => setMobileMenuOpen(true)}
+                    >
+                        <Menu className="w-5 h-5" />
+                    </button>
+                    <div className="mobile-header-title">
+                        <span className="text-sm font-bold text-slate-800">{mobileTitle}</span>
+                    </div>
+                    <div
+                        className="mobile-header-dot"
+                        style={{ background: headerInfo.color }}
+                    />
+                </div>
+
+                {/* Desktop Header */}
                 {!activeTool && (
-                    <header className="dashboard-header">
+                    <header className="dashboard-header desktop-only">
                         <div>
                             <h1>{headerInfo.title}</h1>
                             <p>{headerInfo.description}</p>

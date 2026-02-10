@@ -48,11 +48,11 @@ export default function TasksView() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-blue-500 to-blue-700" />
-                <div className="flex-1">
-                    <h1 className="text-xl font-bold text-slate-800">Task Management</h1>
-                    <p className="text-sm text-slate-400">Track and manage quality program tasks across all projects</p>
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 hidden sm:block" />
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Task Management</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Track and manage quality program tasks across all projects</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <button onClick={() => setViewMode('kanban')} className={`p-2 rounded-lg transition-all ${viewMode === 'kanban' ? 'bg-blue-50 text-blue-700' : 'text-slate-400 hover:bg-slate-50'}`}>
@@ -65,7 +65,7 @@ export default function TasksView() {
             </motion.div>
 
             {/* Stats Row */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
                     { label: 'Total Tasks', value: stats.total, icon: Inbox, color: '#1E6BB8' },
                     { label: 'In Progress', value: stats.inProgress, icon: Clock, color: '#E8772E' },
@@ -88,7 +88,7 @@ export default function TasksView() {
             </motion.div>
 
             {/* Filters */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-2">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-2 flex-wrap">
                 <Filter className="w-3.5 h-3.5 text-slate-400" />
                 <span className="text-xs text-slate-400 mr-1">Priority:</span>
                 {['all', 'critical', 'high', 'medium', 'low'].map(p => (
@@ -103,49 +103,51 @@ export default function TasksView() {
             <AnimatePresence mode="wait">
                 {viewMode === 'kanban' ? (
                     <motion.div key="kanban" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                        className="grid grid-cols-4 gap-4" style={{ minHeight: 400 }}>
-                        {COLUMNS.map(col => {
-                            const cfg = STATUS_CONFIG[col];
-                            return (
-                                <div key={col} className="space-y-3">
-                                    <div className="flex items-center gap-2 pb-2 border-b-2" style={{ borderColor: cfg.dot }}>
-                                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: cfg.dot }} />
-                                        <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">{cfg.label}</span>
-                                        <span className="ml-auto text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">{grouped[col].length}</span>
+                        className="kanban-scroll-wrapper">
+                        <div className="grid grid-cols-4 gap-4 kanban-grid" style={{ minHeight: 400 }}>
+                            {COLUMNS.map(col => {
+                                const cfg = STATUS_CONFIG[col];
+                                return (
+                                    <div key={col} className="space-y-3">
+                                        <div className="flex items-center gap-2 pb-2 border-b-2" style={{ borderColor: cfg.dot }}>
+                                            <div className="w-2.5 h-2.5 rounded-full" style={{ background: cfg.dot }} />
+                                            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">{cfg.label}</span>
+                                            <span className="ml-auto text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">{grouped[col].length}</span>
+                                        </div>
+                                        <div className="space-y-2.5">
+                                            {grouped[col].map((task, ti) => {
+                                                const pr = PRIORITY_CONFIG[task.priority];
+                                                return (
+                                                    <motion.div key={task.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ delay: ti * 0.04 }}
+                                                        className="bg-white rounded-xl p-3.5 border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all cursor-pointer group">
+                                                        <div className="flex items-start justify-between mb-2">
+                                                            <span className="text-[10px] font-mono text-slate-400">{task.id}</span>
+                                                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${pr.bg} ${pr.text} border ${pr.border}`}>{pr.label}</span>
+                                                        </div>
+                                                        <p className="text-xs font-semibold text-slate-700 leading-relaxed mb-3 group-hover:text-slate-900 transition-colors">{task.title}</p>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="text-[10px] text-slate-400 flex items-center gap-1"><User className="w-2.5 h-2.5" />{task.owner.split(' ')[0]}</span>
+                                                            <span className="text-[10px] text-slate-400 flex items-center gap-1"><Calendar className="w-2.5 h-2.5" />{task.dueDate.slice(5)}</span>
+                                                            <span className="ml-auto text-[9px] font-bold text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded">{task.project}</span>
+                                                        </div>
+                                                        <div className="flex gap-1 mt-2">
+                                                            {task.tags.map(tag => (
+                                                                <span key={tag} className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">{tag}</span>
+                                                            ))}
+                                                        </div>
+                                                    </motion.div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                    <div className="space-y-2.5">
-                                        {grouped[col].map((task, ti) => {
-                                            const pr = PRIORITY_CONFIG[task.priority];
-                                            return (
-                                                <motion.div key={task.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: ti * 0.04 }}
-                                                    className="bg-white rounded-xl p-3.5 border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all cursor-pointer group">
-                                                    <div className="flex items-start justify-between mb-2">
-                                                        <span className="text-[10px] font-mono text-slate-400">{task.id}</span>
-                                                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${pr.bg} ${pr.text} border ${pr.border}`}>{pr.label}</span>
-                                                    </div>
-                                                    <p className="text-xs font-semibold text-slate-700 leading-relaxed mb-3 group-hover:text-slate-900 transition-colors">{task.title}</p>
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <span className="text-[10px] text-slate-400 flex items-center gap-1"><User className="w-2.5 h-2.5" />{task.owner.split(' ')[0]}</span>
-                                                        <span className="text-[10px] text-slate-400 flex items-center gap-1"><Calendar className="w-2.5 h-2.5" />{task.dueDate.slice(5)}</span>
-                                                        <span className="ml-auto text-[9px] font-bold text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded">{task.project}</span>
-                                                    </div>
-                                                    <div className="flex gap-1 mt-2">
-                                                        {task.tags.map(tag => (
-                                                            <span key={tag} className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">{tag}</span>
-                                                        ))}
-                                                    </div>
-                                                </motion.div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </motion.div>
                 ) : (
                     <motion.div key="table" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                        className="clean-card overflow-hidden">
+                        className="clean-card overflow-x-auto">
                         <table className="qpmo-table">
                             <thead>
                                 <tr>

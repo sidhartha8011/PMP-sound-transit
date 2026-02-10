@@ -511,15 +511,229 @@ body {
   border-bottom: none;
 }
 
+/* ── Mobile Header ── */
+.mobile-header {
+  display: none;
+}
+
+/* ── Desktop-only elements ── */
+.desktop-only {
+  display: flex;
+}
+
+/* ── Mobile Backdrop ── */
+.mobile-backdrop {
+  display: none;
+}
+
+/* ── Mobile Drawer ── */
+.mobile-drawer {
+  display: none;
+}
+
+.mobile-drawer-close {
+  position: absolute;
+  top: 18px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.mobile-drawer-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .main-content {
     margin-left: 0;
-    padding: 20px;
+    padding: 16px;
+    padding-top: 72px;
     max-width: 100%;
   }
 
-  .left-sidebar {
+  /* Hide desktop sidebar */
+  .desktop-sidebar {
+    display: none;
+  }
+
+  /* Show mobile header */
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    padding: 0 16px;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    z-index: 60;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mobile-menu-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-menu-btn:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .mobile-header-title {
+    flex: 1;
+    text-align: center;
+    color: #f1f5f9;
+  }
+
+  .mobile-header-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Mobile backdrop */
+  .mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 70;
+  }
+
+  /* Mobile drawer */
+  .mobile-drawer {
+    display: flex !important;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: min(300px, 85vw);
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    flex-direction: column;
+    padding: 24px 14px 20px;
+    z-index: 80;
+    overflow-y: auto;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Hide desktop header */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Dashboard header responsive */
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 18px;
+  }
+
+  .header-badge {
+    font-size: 10px;
+    padding: 4px 12px;
+  }
+}
+
+/* ── Small screen component overrides ── */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 12px;
+    padding-top: 68px;
+  }
+
+  /* KPI cards */
+  .kpi-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  /* Chart containers */
+  .clean-card {
+    border-radius: 12px;
+  }
+
+  .chart-container {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Login page */
+  .login-card {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+
+  /* Tables - horizontal scroll */
+  .qpmo-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
+  .qpmo-table {
+    min-width: 600px;
+  }
+
+  /* Insight section */
+  .insight-section {
+    padding: 16px;
+  }
+
+  /* Director banner */
+  .director-banner {
+    padding: 16px;
+  }
+
+  /* Kanban horizontal scroll */
+  .kanban-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -12px;
+    padding: 0 12px 12px;
+  }
+
+  .kanban-grid {
+    min-width: 800px;
+  }
+
+  /* Login page mobile */
+  .login-page {
+    padding: 16px;
+  }
+
+  .login-page::before,
+  .login-page::after {
     display: none;
   }
 }

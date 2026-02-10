@@ -48,16 +48,16 @@ export default function ResourcesView() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-orange-500 to-orange-700" />
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-orange-500 to-orange-700 hidden sm:block" />
                 <div>
-                    <h1 className="text-xl font-bold text-slate-800">Resource Allocation</h1>
-                    <p className="text-sm text-slate-400">Team utilization, skills, and project assignments</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Resource Allocation</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Team utilization, skills, and project assignments</p>
                 </div>
             </motion.div>
 
             {/* Stats */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
                     { label: 'Team Members', value: resourcesData.length, icon: Users, color: '#E8772E' },
                     { label: 'Avg Utilization', value: `${stats.avg}%`, icon: BarChart3, color: '#1E6BB8' },
