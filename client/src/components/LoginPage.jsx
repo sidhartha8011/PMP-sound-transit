@@ -84,7 +84,7 @@ export default function LoginPage({ onLogin }) {
     const bottomSection = directors.filter(d => d.layoutPosition === 'bottom');
 
     const handleClick = (director) => {
-        onLogin(director.dashboardLayer || director.id);
+        onLogin(director.id);
     };
 
     return (
