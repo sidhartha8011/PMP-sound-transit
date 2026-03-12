@@ -5,12 +5,13 @@ import {
     ChevronDown, ChevronRight, AlertTriangle, Users, Zap
 } from 'lucide-react';
 import { decisionsData } from '../data/dashboardData';
+import DecisionVelocity from './charts/DecisionVelocity';
 
 const STATUS_CONFIG = {
-    pending: { label: 'Pending', bg: 'bg-amber-50', text: 'text-amber-700', icon: Clock, dot: '#E8772E' },
-    approved: { label: 'Approved', bg: 'bg-emerald-50', text: 'text-emerald-700', icon: CheckCircle2, dot: '#2E8B57' },
-    deferred: { label: 'Deferred', bg: 'bg-blue-50', text: 'text-blue-700', icon: Pause, dot: '#1E6BB8' },
-    rejected: { label: 'Rejected', bg: 'bg-red-50', text: 'text-red-700', icon: XCircle, dot: '#C02C38' },
+    pending: { label: 'Pending', bg: 'bg-amber-50', text: 'text-amber-700', icon: Clock, dot: '#FD7E14' },
+    approved: { label: 'Approved', bg: 'bg-emerald-50', text: 'text-emerald-700', icon: CheckCircle2, dot: '#28A745' },
+    deferred: { label: 'Deferred', bg: 'bg-blue-50', text: 'text-blue-700', icon: Pause, dot: '#007BFF' },
+    rejected: { label: 'Rejected', bg: 'bg-red-50', text: 'text-red-700', icon: XCircle, dot: '#DC3545' },
 };
 
 const IMPACT_COLOR = {
@@ -40,20 +41,20 @@ export default function DecisionsView() {
         <div className="space-y-6">
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-purple-500 to-purple-700 hidden sm:block" />
+                <div className="w-1 h-12 rounded-full hidden sm:block" style={{ background: 'linear-gradient(to bottom, #DC3545, #DC354580)' }} />
                 <div>
                     <h1 className="text-lg sm:text-xl font-bold text-slate-800">Decision Log</h1>
-                    <p className="text-xs sm:text-sm text-slate-400">Track decisions, rationale, and stakeholder alignment</p>
+                    <p className="text-xs sm:text-sm text-slate-400">Record approvals, strategic choices, and governance rationale</p>
                 </div>
             </motion.div>
 
             {/* Stats */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
-                    { label: 'Total Decisions', value: stats.total, icon: GitBranch, color: '#6A2586' },
-                    { label: 'Pending', value: stats.pending, icon: Clock, color: '#E8772E' },
-                    { label: 'Approved', value: stats.approved, icon: CheckCircle2, color: '#2E8B57' },
-                    { label: 'Avg Decision Time', value: `${stats.avgDays}d`, icon: Zap, color: '#1E6BB8' },
+                    { label: 'Total Decisions', value: stats.total, icon: GitBranch, color: '#DC3545' },
+                    { label: 'Pending', value: stats.pending, icon: Clock, color: '#FD7E14' },
+                    { label: 'Approved', value: stats.approved, icon: CheckCircle2, color: '#28A745' },
+                    { label: 'Avg Decision Time', value: `${stats.avgDays}d`, icon: Zap, color: '#007BFF' },
                 ].map((stat, i) => (
                     <div key={i} className="clean-card p-4 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: stat.color }} />
@@ -70,8 +71,17 @@ export default function DecisionsView() {
                 ))}
             </motion.div>
 
+            {/* Chart Area */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="clean-card p-6">
+                <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                    <div className="w-1.5 h-5 rounded-full" style={{ background: '#DC3545' }} />
+                    Decision Velocity Dashboard
+                </h3>
+                <DecisionVelocity />
+            </motion.div>
+
             {/* Filters */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-2 flex-wrap">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-slate-400 mr-1">Filter:</span>
                 {['all', 'pending', 'approved', 'deferred', 'rejected'].map(s => (
                     <button key={s} onClick={() => setFilterStatus(s)}

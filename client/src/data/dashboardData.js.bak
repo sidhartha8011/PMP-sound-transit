@@ -2,172 +2,20 @@
 // Advanced KPIs + Power BI / Excel-grade charts
 
 export const QPMO_COLORS = {
-    green:  { id: 'green',  primary: '#28A745', light: '#48C764', dark: '#1E7E34', ultraLight: '#E8F8EC', name: 'Facility Operational Excellence' },
-    brown:  { id: 'brown',  primary: '#8B4513', light: '#A0522D', dark: '#6B3410', ultraLight: '#F5EDE6', name: 'Construction Quality' },
-    blue:   { id: 'blue',   primary: '#007BFF', light: '#3395FF', dark: '#0056B3', ultraLight: '#E6F0FF', name: 'Project Performance' },
-    purple: { id: 'purple', primary: '#6F42C1', light: '#8B5CF6', dark: '#5A32A3', ultraLight: '#F0EAFC', name: 'Business Continuity & Safety' },
-    orange: { id: 'orange', primary: '#FD7E14', light: '#FDAB47', dark: '#C96200', ultraLight: '#FFF4E6', name: 'Operations & Maintenance' },
-    red:    { id: 'red',    primary: '#DC3545', light: '#E65C6A', dark: '#A71D2A', ultraLight: '#FCE8EA', name: 'QPMO Oversight & AI' },
+    designQuality: { id: 'designQuality', primary: '#1E6BB8', light: '#4A99E0', dark: '#15507A', ultraLight: '#E8F2FC', name: 'Design Quality' },
+    constructionQuality: { id: 'constructionQuality', primary: '#6A2586', light: '#8B3AAD', dark: '#4A1A5E', ultraLight: '#F3E8F9', name: 'Construction Quality' },
+    facilityExcellence: { id: 'facilityExcellence', primary: '#2E8B57', light: '#3DAF6E', dark: '#1F6B42', ultraLight: '#E6F5ED', name: 'Facility Operational Excellence' },
+    operationsMaintenance: { id: 'operationsMaintenance', primary: '#E8772E', light: '#F59A56', dark: '#C25E1A', ultraLight: '#FDF0E4', name: 'Operations & Maintenance' },
+    qpmoIntegrated: { id: 'qpmoIntegrated', primary: '#C02C38', light: '#DC4F5A', dark: '#8E1F28', ultraLight: '#FCEBED', name: 'QPMO Integrated' },
 };
 
 export const directors = [
-    {
-        id: 'facility-excellence',
-        dashboardLayer: 'executive',
-        name: 'Facility Operational Excellence',
-        role: 'Facility Operational Excellence',
-        shortRole: 'Facility Excellence',
-        color: QPMO_COLORS.green,
-        description: 'Business & mission performance — Organizational success',
-        icon: 'Building2',
-        layoutPosition: 'top',
-    },
-    {
-        id: 'construction-quality',
-        dashboardLayer: 'program',
-        name: 'Construction Quality',
-        role: 'Construction Quality',
-        shortRole: 'Construction',
-        color: QPMO_COLORS.brown,
-        description: 'Build it right — Construction phase',
-        icon: 'HardHat',
-        layoutPosition: 'middle',
-    },
-    {
-        id: 'project-performance',
-        dashboardLayer: 'program',
-        name: 'Project Performance',
-        role: 'Project Performance',
-        shortRole: 'Performance',
-        color: QPMO_COLORS.blue,
-        description: 'Deliver successfully — Project governance',
-        icon: 'Layers',
-        layoutPosition: 'middle',
-    },
-    {
-        id: 'business-continuity',
-        dashboardLayer: 'operations',
-        name: 'Business Continuity',
-        role: 'Business Continuity & Safety',
-        shortRole: 'Continuity',
-        color: QPMO_COLORS.purple,
-        description: 'Resilience & readiness — System sustainability',
-        icon: 'Shield',
-        layoutPosition: 'middle',
-    },
-    {
-        id: 'operations-maintenance',
-        dashboardLayer: 'operations',
-        name: 'Operations & Maintenance',
-        role: 'Operations & Maintenance',
-        shortRole: 'O&M',
-        color: QPMO_COLORS.orange,
-        description: 'Asset lifecycle management — Long-term operations',
-        icon: 'Wrench',
-        layoutPosition: 'middle',
-    },
-    {
-        id: 'qpmo-oversight',
-        dashboardLayer: 'executive',
-        name: 'QPMO Oversight & AI Intelligence',
-        role: 'QPMO Oversight & AI Intelligence',
-        shortRole: 'QPMO Oversight',
-        color: QPMO_COLORS.red,
-        description: 'Strategic intelligence & AI — Executive governance',
-        icon: 'Compass',
-        layoutPosition: 'bottom',
-    },
+    { id: 'designQuality', name: 'Design Quality Director', role: 'Design Quality', shortRole: 'Design', color: QPMO_COLORS.designQuality, description: 'Reviews, specifications, constructability, and BIM coordination', icon: 'Compass' },
+    { id: 'constructionQuality', name: 'Construction Quality Director', role: 'Construction Quality', shortRole: 'Construction', color: QPMO_COLORS.constructionQuality, description: 'Inspections, NCRs, first-time-right, rework prevention', icon: 'HardHat' },
+    { id: 'facilityExcellence', name: 'Facility Operational Excellence Director', role: 'Facility Operational Excellence', shortRole: 'Facility', color: QPMO_COLORS.facilityExcellence, description: 'System reliability, commissioning, energy efficiency, readiness', icon: 'Building2' },
+    { id: 'operationsMaintenance', name: 'Operations & Maintenance Director', role: 'Operations & Maintenance', shortRole: 'O&M', color: QPMO_COLORS.operationsMaintenance, description: 'Preventive maintenance, response time, lifecycle cost, availability', icon: 'Wrench' },
+    { id: 'qpmoIntegrated', name: 'QPMO Integrated Dashboard', role: 'QPMO Oversight', shortRole: 'QPMO', color: QPMO_COLORS.qpmoIntegrated, description: 'Cross-phase alignment, quality system health, strategic priorities', icon: 'Layers' },
 ];
-
-// ═══════════════════════════════════════════════════════
-// QPMO 30-KPI RAIL INDUSTRY MODEL (5 KPIs × 6 Sections)
-// ═══════════════════════════════════════════════════════
-export const QPMO_SECTION_KPIS = {
-    'facility-excellence': {
-        title: 'Facility Operational Excellence',
-        color: QPMO_COLORS.green,
-        description: 'Service performance & mission success',
-        charts: ['ProgramHealthRadar', 'CapitalPortfolioMap'],
-        okr: { objective: 'Improve operational readiness of new infrastructure.', keyResults: ['Commissioning readiness > 95%', 'Service reliability > 98%', 'Energy efficiency improved 10%'] },
-        kpis: [
-            { label: 'System Availability', value: '99.2%', target: '99%', trend: 'up', measures: '% of rail system operational uptime', matters: 'Measures network reliability' },
-            { label: 'On-Time Performance', value: '96.5%', target: '95%', trend: 'up', measures: '% trains arriving on schedule', matters: 'Key rider service metric' },
-            { label: 'Passenger Throughput', value: '142K/day', target: '135K', trend: 'up', measures: 'Riders served per day', matters: 'Capacity utilization' },
-            { label: 'Energy Efficiency', value: '4.2 kWh/mi', target: '<4.5', trend: 'up', measures: 'Energy per train-mile', matters: 'Sustainability & cost control' },
-            { label: 'Service Reliability', value: '2.1', target: '<3.0', trend: 'up', measures: 'Delay incidents per 1000 trips', matters: 'Operational stability' },
-        ]
-    },
-    'construction-quality': {
-        title: 'Construction Quality',
-        color: QPMO_COLORS.brown,
-        description: 'Build quality & defect prevention',
-        charts: ['DeliveryPipeline'],
-        okr: { objective: 'Deliver infrastructure with zero critical defects.', keyResults: ['NCR rate reduced by 30%', 'Rework below 2%', '100% inspection coverage'] },
-        kpis: [
-            { label: 'Inspection Pass Rate', value: '94%', target: '95%', trend: 'stable', measures: '% inspections passed first time', matters: 'Build-quality indicator' },
-            { label: 'NCR Rate', value: '2.4/project', target: '<3', trend: 'up', measures: 'Non-conformance reports per project', matters: 'Defect detection' },
-            { label: 'Rework Cost %', value: '1.8%', target: '<2%', trend: 'up', measures: 'Rework cost vs total construction cost', matters: 'Quality efficiency' },
-            { label: 'Punch List Closure Rate', value: '87%', target: '90%', trend: 'stable', measures: 'Speed of resolving defects', matters: 'Project closeout readiness' },
-            { label: 'Design Clash Resolution', value: '98%', target: '100%', trend: 'up', measures: 'BIM conflicts resolved before construction', matters: 'Prevents field rework' },
-        ]
-    },
-    'project-performance': {
-        title: 'Project Performance',
-        color: QPMO_COLORS.blue,
-        description: 'Delivery efficiency & project governance',
-        charts: ['ScheduleConfidence', 'DecisionVelocity'],
-        okr: { objective: 'Deliver capital projects on time and on budget.', keyResults: ['SPI ≥ 1.0', 'CPI ≥ 1.0', 'Change orders reduced 20%'] },
-        kpis: [
-            { label: 'Schedule Performance Index (SPI)', value: '0.96', target: '≥ 1.0', trend: 'stable', measures: 'Schedule adherence', matters: 'Delivery efficiency' },
-            { label: 'Cost Performance Index (CPI)', value: '1.02', target: '≥ 1.0', trend: 'up', measures: 'Budget performance', matters: 'Financial control' },
-            { label: 'Change Order Frequency', value: '4.2%', target: '<5%', trend: 'up', measures: 'Change orders per contract', matters: 'Scope stability' },
-            { label: 'Risk Mitigation Completion', value: '88%', target: '90%', trend: 'stable', measures: '% risks mitigated on time', matters: 'Risk governance' },
-            { label: 'Procurement Cycle Time', value: '42 days', target: '<45', trend: 'up', measures: 'Time to award contracts', matters: 'Supply chain efficiency' },
-        ]
-    },
-    'business-continuity': {
-        title: 'Business Continuity & Safety',
-        color: QPMO_COLORS.purple,
-        description: 'Resilience & safety',
-        charts: ['RiskHeatMap'],
-        okr: { objective: 'Ensure uninterrupted transportation service.', keyResults: ['Emergency response time < 15 min', 'Zero major service interruptions', 'Resilience score > 90%'] },
-        kpis: [
-            { label: 'Safety Incident Rate', value: '0.42', target: '<1.0', trend: 'up', measures: 'Incidents per 200K work hours', matters: 'Workforce safety' },
-            { label: 'Emergency Response Time', value: '12 min', target: '<15 min', trend: 'up', measures: 'Response to operational disruptions', matters: 'Service resilience' },
-            { label: 'Cybersecurity Incident Rate', value: '0', target: '0', trend: 'stable', measures: 'System cyber events', matters: 'Infrastructure protection' },
-            { label: 'Disaster Recovery Readiness', value: '92/100', target: '>90', trend: 'up', measures: 'Recovery plan readiness score', matters: 'System resilience' },
-            { label: 'Climate Risk Exposure', value: 'Low', target: 'Low', trend: 'stable', measures: 'Infrastructure risk from environmental events', matters: 'Long-term sustainability' },
-        ]
-    },
-    'operations-maintenance': {
-        title: 'Operations & Maintenance',
-        color: QPMO_COLORS.orange,
-        description: 'Asset lifecycle management',
-        charts: ['AssetLifecycle', 'ResourceCapacity', 'TaskThroughput'],
-        okr: { objective: 'Maximize reliability of operational infrastructure.', keyResults: ['Asset availability > 99%', 'Maintenance backlog reduced 25%', 'Predictive maintenance coverage > 70%'] },
-        kpis: [
-            { label: 'Asset Availability', value: '97.5%', target: '>96%', trend: 'up', measures: '% time equipment operational', matters: 'Infrastructure reliability' },
-            { label: 'Mean Time Between Failures', value: '42 days', target: '>30d', trend: 'up', measures: 'Time between system failures', matters: 'Asset health' },
-            { label: 'Maintenance Response Time', value: '2.4 hrs', target: '<4 hrs', trend: 'up', measures: 'Time to fix operational issues', matters: 'Service continuity' },
-            { label: 'Maintenance Backlog', value: '18', target: '<20', trend: 'stable', measures: 'Outstanding maintenance work', matters: 'Asset risk indicator' },
-            { label: 'Lifecycle Asset Cost', value: '$4.2M', target: '$4.5M', trend: 'up', measures: 'Cost over asset life', matters: 'Financial sustainability' },
-        ]
-    },
-    'qpmo-oversight': {
-        title: 'QPMO Oversight & AI Intelligence',
-        color: QPMO_COLORS.red,
-        description: 'Strategic governance & AI analytics',
-        charts: ['ProgramHealthRadar', 'RiskHeatMap'],
-        okr: { objective: 'Enable data-driven leadership decisions.', keyResults: ['Predictive risk detection > 90%', 'Portfolio dashboard updated daily', 'AI insights adopted by leadership'] },
-        kpis: [
-            { label: 'Portfolio Risk Index', value: '14.2', target: '<15', trend: 'stable', measures: 'Overall risk across projects', matters: 'Executive awareness' },
-            { label: 'Governance Compliance Score', value: '94%', target: '>90%', trend: 'up', measures: 'Audit & process compliance', matters: 'Organizational maturity' },
-            { label: 'Data Completeness Index', value: '98%', target: '100%', trend: 'up', measures: 'Quality of PMIS/BIM data', matters: 'Digital decision readiness' },
-            { label: 'Predictive Schedule Risk', value: '86%', target: '>90%', trend: 'stable', measures: 'AI prediction of delays', matters: 'Proactive mitigation' },
-            { label: 'Strategic Alignment Score', value: '88/100', target: '>85', trend: 'up', measures: 'Projects aligned to mission priorities', matters: 'Portfolio optimization' },
-        ]
-    }
-};
 
 // ═══════════════════════════════════════════════════════
 // 1. DESIGN QUALITY (BLUE)
@@ -898,152 +746,20 @@ export const qpmoIntegratedData = {
 };
 
 export function getDashboardData(directorId) {
-    switch (directorId) { // Data functions will be defined inside components directly or layered here.
-        case 'executive': return executiveData;
-        case 'program': return programData;
-        case 'operations': return operationsData;
+    switch (directorId) {
+        case 'designQuality': return designQualityData;
+        case 'constructionQuality': return constructionQualityData;
+        case 'facilityExcellence': return facilityExcellenceData;
+        case 'operationsMaintenance': return operationsMaintenanceData;
         default: return null;
     }
 }
 
-// ═══════════════════════════════════════════════════════
-// 6. QPMO INTELLIGENCE DASHBOARD (NEW 1-4-1 LAYOUT)
-// ═══════════════════════════════════════════════════════
-export const qpmoIntelligenceData = {
-    // Top Section (Green)
-    facilityExcellence: {
-        id: 'facility-excellence',
-        title: 'Facility Operational Excellence',
-        color: '#2E8B57', // Green
-        description: 'Business & mission performance, organizational success',
-        kpis: [
-            { label: 'System Availability', value: '99.2%', target: '99%' },
-            { label: 'On-Time Performance', value: '96.5%', target: '95%' },
-            { label: 'Energy Efficiency', value: '+8.4%', target: '+10%' },
-            { label: 'Supply Chain Reliability', value: '92%', target: '90%' },
-            { label: 'Customer Satisfaction', value: '4.6/5', target: '4.5' },
-        ],
-        okr: {
-            objective: 'Improve operational readiness of new infrastructure.',
-            keyResults: [
-                'Commissioning readiness > 95%',
-                'Service reliability > 98%',
-                'Energy efficiency improved 10%'
-            ]
-        }
-    },
-    // Middle 1 (Brown)
-    constructionQuality: {
-        id: 'construction-quality',
-        title: 'Construction Quality',
-        color: '#8B4513', // Brown
-        description: 'Build it right, Construction phase',
-        kpis: [
-            { label: 'Inspection Pass Rate', value: '94%', target: '95%' },
-            { label: 'NCR Frequency', value: '2.4/mo', target: '<3' },
-            { label: 'Rework Cost', value: '1.8%', target: '<2%' },
-            { label: 'Clash Resolution', value: '98%', target: '100%' },
-        ],
-        okr: {
-            objective: 'Deliver infrastructure with zero critical defects.',
-            keyResults: [
-                'NCR rate reduced by 30%',
-                'Rework below 2%',
-                '100% inspection coverage'
-            ]
-        }
-    },
-    // Middle 2 (Blue)
-    projectPerformance: {
-        id: 'project-performance',
-        title: 'Project Performance',
-        color: '#1E6BB8', // Blue
-        description: 'Deliver successfully, Project governance',
-        kpis: [
-            { label: 'SPI (Schedule)', value: '0.96', target: '1.0' },
-            { label: 'CPI (Cost)', value: '1.02', target: '1.0' },
-            { label: 'Change Orders', value: '4.2%', target: '<5%' },
-            { label: 'Risk Mitigation', value: '88%', target: '90%' },
-        ],
-        okr: {
-            objective: 'Deliver capital projects on time and on budget.',
-            keyResults: [
-                'SPI ≥ 1.0',
-                'CPI ≥ 1.0',
-                'Change orders reduced 20%'
-            ]
-        }
-    },
-    // Middle 3 (Purple)
-    businessContinuity: {
-        id: 'business-continuity',
-        title: 'Business Continuity',
-        color: '#6A2586', // Purple
-        description: 'Resilience & readiness, System sustainability',
-        kpis: [
-            { label: 'Safety Incidents', value: '0.4', target: '<1.0' },
-            { label: 'Resilience Score', value: '92/100', target: '90' },
-            { label: 'Cyber Incidents', value: '0', target: '0' },
-            { label: 'Disaster Recovery', value: '2.5h', target: '<4h' },
-        ],
-        okr: {
-            objective: 'Ensure uninterrupted transportation service.',
-            keyResults: [
-                'Emergency response time < 15 minutes',
-                'Zero major service interruptions',
-                'Resilience score > 90%'
-            ]
-        }
-    },
-    // Middle 4 (Orange)
-    operationsMaintenance: {
-        id: 'operations-maintenance',
-        title: 'Operations & Maintenance',
-        color: '#E8772E', // Orange
-        description: 'Asset lifecycle management, Long-term operations',
-        kpis: [
-            { label: 'MTBF', value: '45d', target: '>40d' },
-            { label: 'Maint. Backlog', value: '18', target: '<20' },
-            { label: 'Asset Downtime', value: '1.2%', target: '<2%' },
-            { label: 'PM Completion', value: '96%', target: '95%' },
-        ],
-        okr: {
-            objective: 'Maximize reliability of operational infrastructure.',
-            keyResults: [
-                'Asset availability > 99%',
-                'Maintenance backlog reduced 25%',
-                'Predictive maintenance coverage > 70%'
-            ]
-        }
-    },
-    // Bottom Section (Red)
-    qpmoOversight: {
-        id: 'qpmo-oversight',
-        title: 'QPMO Oversight & AI Intelligence',
-        color: '#C02C38', // Red
-        description: 'Strategic intelligence & AI, Executive governance',
-        kpis: [
-            { label: 'Portfolio Risk Index', value: '14.2', target: '<15' },
-            { label: 'Schedule Risk Model', value: '86%', target: '>90%' },
-            { label: 'Data Completeness', value: '98%', target: '100%' },
-            { label: 'AI Prediction Act.', value: '82%', target: '>80%' },
-        ],
-        okr: {
-            objective: 'Enable data-driven leadership decisions.',
-            keyResults: [
-                'Predictive risk detection > 90%',
-                'Portfolio performance dashboard updated daily',
-                'AI insights adopted by leadership'
-            ]
-        }
-    }
-};
-
 export const toolItems = [
-    { id: 'tasks', label: 'Action Board', icon: 'CheckSquare' },
-    { id: 'decisions', label: 'Decision Log', icon: 'GitBranch' },
-    { id: 'documents', label: 'Knowledge Hub', icon: 'FileText' },
-    { id: 'resources', label: 'Capacity & Talent', icon: 'Bookmark' },
+    { id: 'tasks', label: 'Tasks', icon: 'CheckSquare' },
+    { id: 'decisions', label: 'Decisions', icon: 'GitBranch' },
+    { id: 'documents', label: 'Documents', icon: 'FileText' },
+    { id: 'resources', label: 'Resources', icon: 'Bookmark' },
 ];
 
 /* ==========  TOOLS DATA  ========== */

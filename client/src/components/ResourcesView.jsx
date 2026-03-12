@@ -9,6 +9,7 @@ import {
     Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts';
 import { resourcesData } from '../data/dashboardData';
+import ResourceCapacity from './charts/ResourceCapacity';
 
 const tooltipStyle = {
     background: '#1e293b', border: 'none', borderRadius: '12px',
@@ -49,20 +50,20 @@ export default function ResourcesView() {
         <div className="space-y-6">
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-orange-500 to-orange-700 hidden sm:block" />
+                <div className="w-1 h-12 rounded-full hidden sm:block" style={{ background: 'linear-gradient(to bottom, #FD7E14, #FD7E1480)' }} />
                 <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Resource Allocation</h1>
-                    <p className="text-xs sm:text-sm text-slate-400">Team utilization, skills, and project assignments</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Capacity & Talent</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Manage people, skills, and utilization — What capacity is available?</p>
                 </div>
             </motion.div>
 
             {/* Stats */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
-                    { label: 'Team Members', value: resourcesData.length, icon: Users, color: '#E8772E' },
-                    { label: 'Avg Utilization', value: `${stats.avg}%`, icon: BarChart3, color: '#1E6BB8' },
-                    { label: 'Over-Allocated', value: stats.over, icon: AlertTriangle, color: '#C02C38' },
-                    { label: 'Total Certifications', value: stats.certs, icon: Award, color: '#2E8B57' },
+                    { label: 'Team Members', value: resourcesData.length, icon: Users, color: '#FD7E14' },
+                    { label: 'Avg Utilization', value: `${stats.avg}%`, icon: BarChart3, color: '#007BFF' },
+                    { label: 'Over-Allocated', value: stats.over, icon: AlertTriangle, color: '#DC3545' },
+                    { label: 'Certifications', value: stats.certs, icon: Award, color: '#28A745' },
                 ].map((stat, i) => (
                     <div key={i} className="clean-card p-4 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: stat.color }} />
@@ -95,7 +96,7 @@ export default function ResourcesView() {
                             <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${v}%`, 'Utilization']} />
                             <Bar dataKey="utilization" radius={[0, 6, 6, 0]} barSize={20}>
                                 {utilizationChartData.map((entry, i) => (
-                                    <motion.rect key={i} fill={entry.utilization > 90 ? '#C02C38' : entry.utilization > 75 ? '#E8772E' : '#2E8B57'} />
+                                    <motion.rect key={i} fill={entry.utilization > 90 ? '#DC3545' : entry.utilization > 75 ? '#FD7E14' : '#28A745'} />
                                 ))}
                             </Bar>
                         </BarChart>
@@ -113,17 +114,26 @@ export default function ResourcesView() {
                             <PolarGrid stroke="#e2e8f0" strokeDasharray="3 3" />
                             <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10 }} />
                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: '#94a3b8', fontSize: 9 }} tickCount={5} />
-                            <Radar name="Skills" dataKey="value" stroke="#E8772E" fill="#E8772E" fillOpacity={0.15} strokeWidth={2} />
+                            <Radar name="Skills" dataKey="value" stroke="#FD7E14" fill="#FD7E14" fillOpacity={0.15} strokeWidth={2} />
                             <Tooltip contentStyle={tooltipStyle} />
                         </RadarChart>
                     </ResponsiveContainer>
+                </motion.div>
+                
+                {/* Resource Capacity Map (Heatmap) */}
+                <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="clean-card p-6 lg:col-span-2">
+                    <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                        <div className="w-1.5 h-5 rounded-full bg-orange-500" />
+                        Resource Capacity & Utilization Heatmap
+                    </h3>
+                    <ResourceCapacity />
                 </motion.div>
             </div>
 
             {/* Resource Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {resourcesData.map((person, i) => {
-                    const utilColor = person.utilization > 90 ? '#C02C38' : person.utilization > 75 ? '#E8772E' : '#2E8B57';
+                    const utilColor = person.utilization > 90 ? '#DC3545' : person.utilization > 75 ? '#FD7E14' : '#28A745';
                     const statusLabel = person.status === 'over-allocated' ? 'Over-Allocated' : person.status === 'available' ? 'Available' : 'Active';
                     const statusClass = person.status === 'over-allocated' ? 'bg-red-50 text-red-700' : person.status === 'available' ? 'bg-emerald-50 text-emerald-700' : 'bg-blue-50 text-blue-700';
                     return (

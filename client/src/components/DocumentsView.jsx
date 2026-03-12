@@ -5,6 +5,7 @@ import {
     AlertCircle, Archive, LayoutGrid, List, Search
 } from 'lucide-react';
 import { documentsData } from '../data/dashboardData';
+import KnowledgeFlow from './charts/KnowledgeFlow';
 
 const STATUS_CONFIG = {
     draft: { label: 'Draft', bg: 'bg-slate-100', text: 'text-slate-600', icon: Clock },
@@ -14,10 +15,10 @@ const STATUS_CONFIG = {
 };
 
 const CATEGORY_CONFIG = {
-    specification: { label: 'Specification', color: '#1E6BB8', icon: '📐' },
-    report: { label: 'Report', color: '#2E8B57', icon: '📊' },
-    procedure: { label: 'Procedure', color: '#6A2586', icon: '📋' },
-    submittal: { label: 'Submittal', color: '#E8772E', icon: '📩' },
+    specification: { label: 'Specification', color: '#007BFF', icon: '📐' },
+    report: { label: 'Report', color: '#28A745', icon: '📊' },
+    procedure: { label: 'Procedure', color: '#6F42C1', icon: '📋' },
+    submittal: { label: 'Submittal', color: '#FD7E14', icon: '📩' },
 };
 
 export default function DocumentsView() {
@@ -43,16 +44,16 @@ export default function DocumentsView() {
         <div className="space-y-6">
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-emerald-500 to-emerald-700 hidden sm:block" />
+                <div className="w-1 h-12 rounded-full hidden sm:block" style={{ background: 'linear-gradient(to bottom, #007BFF, #6F42C1)' }} />
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Document Registry</h1>
-                    <p className="text-xs sm:text-sm text-slate-400">Central repository for project documents, specs, and reports</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Knowledge Hub</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Plans, specs, reports, procedures — What information supports the work?</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-400 hover:bg-slate-50'}`}>
+                    <button onClick={() => setViewMode('grid')} className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-blue-50 text-blue-700' : 'text-slate-400 hover:bg-slate-50'}`}>
                         <LayoutGrid className="w-4 h-4" />
                     </button>
-                    <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-400 hover:bg-slate-50'}`}>
+                    <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-blue-50 text-blue-700' : 'text-slate-400 hover:bg-slate-50'}`}>
                         <List className="w-4 h-4" />
                     </button>
                 </div>
@@ -61,10 +62,10 @@ export default function DocumentsView() {
             {/* Stats */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
-                    { label: 'Total Documents', value: stats.total, icon: FileText, color: '#2E8B57' },
-                    { label: 'Pending Review', value: stats.pendingReview, icon: Clock, color: '#E8772E' },
-                    { label: 'Approved', value: stats.approved, icon: CheckCircle2, color: '#1E6BB8' },
-                    { label: 'Updated This Week', value: stats.recent, icon: AlertCircle, color: '#6A2586' },
+                    { label: 'Total Documents', value: stats.total, icon: FileText, color: '#007BFF' },
+                    { label: 'Pending Review', value: stats.pendingReview, icon: Clock, color: '#FD7E14' },
+                    { label: 'Approved', value: stats.approved, icon: CheckCircle2, color: '#28A745' },
+                    { label: 'Updated This Week', value: stats.recent, icon: AlertCircle, color: '#6F42C1' },
                 ].map((stat, i) => (
                     <div key={i} className="clean-card p-4 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: stat.color }} />
@@ -81,13 +82,22 @@ export default function DocumentsView() {
                 ))}
             </motion.div>
 
+            {/* Chart Area */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="clean-card p-6">
+                <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                    <div className="w-1.5 h-5 rounded-full" style={{ background: '#007BFF' }} />
+                    Knowledge Flow Activity
+                </h3>
+                <KnowledgeFlow />
+            </motion.div>
+
             {/* Filters Row */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-3 flex-wrap">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex items-center gap-3 flex-wrap">
                 {/* Search */}
                 <div className="relative flex-1 min-w-[180px] max-w-xs">
                     <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input type="text" placeholder="Search documents..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all" />
+                        className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all" />
                 </div>
                 {/* Category Tabs */}
                 <div className="flex items-center gap-1.5 flex-wrap">
@@ -147,7 +157,7 @@ export default function DocumentsView() {
                                         <Download className="w-3 h-3" />{doc.downloads}
                                     </div>
                                     <div className="flex-1" />
-                                    <button className="text-[10px] font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition-colors">
+                                    <button className="text-[10px] font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors">
                                         <Eye className="w-3 h-3" /> View
                                     </button>
                                 </div>

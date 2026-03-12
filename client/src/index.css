@@ -3,11 +3,12 @@
 
 /* QPMO Color Variables */
 :root {
-  --qpmo-blue: #1E6BB8;
-  --qpmo-purple: #6A2586;
-  --qpmo-green: #2E8B57;
-  --qpmo-orange: #E8772E;
-  --qpmo-red: #C02C38;
+  --qpmo-green: #28A745;
+  --qpmo-brown: #8B4513;
+  --qpmo-blue: #007BFF;
+  --qpmo-purple: #6F42C1;
+  --qpmo-orange: #FD7E14;
+  --qpmo-red: #DC3545;
   --sidebar-width: 280px;
 }
 

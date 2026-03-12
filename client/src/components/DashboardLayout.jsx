@@ -3,19 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { directors, toolItems } from '../data/dashboardData';
 import {
-    Compass, HardHat, Building2, Wrench, Layers,
+    Compass, HardHat, Building2, Wrench, Layers, Shield,
     ChevronRight, CheckSquare, GitBranch, FileText, Bookmark,
     LogOut, LayoutGrid, Activity, Menu, X
 } from 'lucide-react';
-import DirectorView from './DirectorView';
-import QPMOIntegratedView from './QPMOIntegratedView';
+import QPMOSectionView from './QPMOSectionView';
 import TasksView from './TasksView';
 import DecisionsView from './DecisionsView';
 import DocumentsView from './DocumentsView';
 import ResourcesView from './ResourcesView';
 
 const directorIcons = {
-    Compass, HardHat, Building2, Wrench, Layers,
+    Compass, HardHat, Building2, Wrench, Layers, Shield
 };
 
 const toolIcons = {
@@ -38,9 +37,10 @@ const TOOL_VIEWS = {
 
 export default function DashboardLayout({ initialDirectorId, onLogout }) {
     const { theme, setActiveTheme } = useTheme();
-    const [activeDirectorId, setActiveDirectorId] = useState(initialDirectorId || 'designQuality');
+    const [activeDirectorId, setActiveDirectorId] = useState(initialDirectorId || 'facility-excellence');
     const [activeTool, setActiveTool] = useState(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const activeDirector = directors.find(d => d.id === activeDirectorId);
 
     // Close mobile menu on window resize above breakpoint
     useEffect(() => {
@@ -63,7 +63,7 @@ export default function DashboardLayout({ initialDirectorId, onLogout }) {
         setMobileMenuOpen(false);
     };
 
-    const activeDirector = directors.find(d => d.id === activeDirectorId);
+
 
     // Sort directors so the active one is on top
     const sortedDirectors = useMemo(() => {
@@ -177,7 +177,7 @@ export default function DashboardLayout({ initialDirectorId, onLogout }) {
             {/* Footer */}
             <div className="pt-3 mt-3 border-t border-white/6">
                 <p className="text-[10px] text-slate-500 text-center leading-relaxed">
-                    Sound Transit Authority<br />
+                    QPMO Digital Command Center<br />
                     © 2025 Capital Program
                 </p>
             </div>
@@ -271,10 +271,8 @@ export default function DashboardLayout({ initialDirectorId, onLogout }) {
                     >
                         {activeTool ? (
                             <ToolView />
-                        ) : activeDirectorId === 'qpmoIntegrated' ? (
-                            <QPMOIntegratedView />
                         ) : (
-                            <DirectorView directorId={activeDirectorId} />
+                            <QPMOSectionView sectionId={activeDirectorId} />
                         )}
                     </motion.div>
                 </AnimatePresence>

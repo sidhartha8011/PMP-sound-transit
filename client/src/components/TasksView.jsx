@@ -5,12 +5,13 @@ import {
     Calendar, User, Tag, LayoutGrid, List, Filter
 } from 'lucide-react';
 import { tasksData } from '../data/dashboardData';
+import TaskThroughput from './charts/TaskThroughput';
 
 const STATUS_CONFIG = {
     'backlog': { label: 'Backlog', bg: 'bg-slate-100', text: 'text-slate-600', dot: '#94a3b8' },
-    'in-progress': { label: 'In Progress', bg: 'bg-blue-50', text: 'text-blue-700', dot: '#1E6BB8' },
-    'review': { label: 'Review', bg: 'bg-amber-50', text: 'text-amber-700', dot: '#E8772E' },
-    'done': { label: 'Done', bg: 'bg-emerald-50', text: 'text-emerald-700', dot: '#2E8B57' },
+    'in-progress': { label: 'In Progress', bg: 'bg-blue-50', text: 'text-blue-700', dot: '#007BFF' },
+    'review': { label: 'Review', bg: 'bg-amber-50', text: 'text-amber-700', dot: '#8B4513' },
+    'done': { label: 'Done', bg: 'bg-emerald-50', text: 'text-emerald-700', dot: '#28A745' },
 };
 
 const PRIORITY_CONFIG = {
@@ -49,10 +50,10 @@ export default function TasksView() {
         <div className="space-y-6">
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <div className="w-1 h-12 rounded-full bg-gradient-to-b from-blue-500 to-blue-700 hidden sm:block" />
+                <div className="w-1 h-12 rounded-full hidden sm:block" style={{ background: 'linear-gradient(to bottom, #8B4513, #007BFF)' }} />
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Task Management</h1>
-                    <p className="text-xs sm:text-sm text-slate-400">Track and manage quality program tasks across all projects</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-slate-800">Action Board</h1>
+                    <p className="text-xs sm:text-sm text-slate-400">Track work execution across all projects — What must be done?</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <button onClick={() => setViewMode('kanban')} className={`p-2 rounded-lg transition-all ${viewMode === 'kanban' ? 'bg-blue-50 text-blue-700' : 'text-slate-400 hover:bg-slate-50'}`}>
@@ -67,10 +68,10 @@ export default function TasksView() {
             {/* Stats Row */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 {[
-                    { label: 'Total Tasks', value: stats.total, icon: Inbox, color: '#1E6BB8' },
-                    { label: 'In Progress', value: stats.inProgress, icon: Clock, color: '#E8772E' },
-                    { label: 'Completed', value: stats.done, icon: CheckCircle2, color: '#2E8B57' },
-                    { label: 'Critical', value: stats.critical, icon: AlertTriangle, color: '#C02C38' },
+                    { label: 'Total Tasks', value: stats.total, icon: Inbox, color: '#8B4513' },
+                    { label: 'In Progress', value: stats.inProgress, icon: Clock, color: '#007BFF' },
+                    { label: 'Completed', value: stats.done, icon: CheckCircle2, color: '#28A745' },
+                    { label: 'Critical', value: stats.critical, icon: AlertTriangle, color: '#DC3545' },
                 ].map((stat, i) => (
                     <div key={i} className="clean-card p-4 relative overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: stat.color }} />
@@ -87,8 +88,17 @@ export default function TasksView() {
                 ))}
             </motion.div>
 
+            {/* Chart Area */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="clean-card p-6">
+                <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                    <div className="w-1.5 h-5 rounded-full" style={{ background: '#8B4513' }} />
+                    Task Throughput Flow
+                </h3>
+                <TaskThroughput />
+            </motion.div>
+
             {/* Filters */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-center gap-2 flex-wrap">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="flex items-center gap-2 flex-wrap">
                 <Filter className="w-3.5 h-3.5 text-slate-400" />
                 <span className="text-xs text-slate-400 mr-1">Priority:</span>
                 {['all', 'critical', 'high', 'medium', 'low'].map(p => (
