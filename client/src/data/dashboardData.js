@@ -87,7 +87,13 @@ export const QPMO_SECTION_KPIS = {
         title: 'Facility Operational Excellence',
         color: QPMO_COLORS.green,
         description: 'Service performance & mission success',
-        charts: ['ProgramHealthRadar', 'CapitalPortfolioMap'],
+        aiInsight: 'System Availability has exceeded 99% for 3 consecutive months. Energy efficiency improvement of 8% is tracking ahead of 10% annual target. Recommend expanding predictive maintenance to Escalator Bank B to maintain uptime trajectory.',
+        charts: [
+            { name: 'ProgramHealthRadar', title: 'Program Health Radar', subtitle: 'Safety, Quality, Schedule, Cost, Risk, Stakeholder' },
+            { name: 'CapitalPortfolioMap', title: 'Capital Portfolio Map', subtitle: 'TDLE, WSLE, ELE — Sized by budget, colored by risk' },
+            { name: 'AssetLifecycle', title: 'Asset Lifecycle Dashboard', subtitle: 'Design → Installed → Tested → Commissioned → Operational' },
+            { name: 'ResourceCapacity', title: 'Facility Resource Utilization', subtitle: 'Staff allocation across stations and O&M zones' },
+        ],
         okr: { objective: 'Improve operational readiness of new infrastructure.', keyResults: ['Commissioning readiness > 95%', 'Service reliability > 98%', 'Energy efficiency improved 10%'] },
         kpis: [
             { label: 'System Availability', value: '99.2%', target: '99%', trend: 'up', measures: '% of rail system operational uptime', matters: 'Measures network reliability' },
@@ -101,7 +107,12 @@ export const QPMO_SECTION_KPIS = {
         title: 'Construction Quality',
         color: QPMO_COLORS.brown,
         description: 'Build quality & defect prevention',
-        charts: ['DeliveryPipeline'],
+        aiInsight: 'NCR-2024-089 root cause analysis reveals a recurring pattern in concrete batch QC holds across NLX. First-Time-Right rate dropped 3% this month. Recommend focused training on WSLE concrete pour procedures.',
+        charts: [
+            { name: 'DeliveryPipeline', title: 'Construction Delivery Pipeline', subtitle: 'Planning → Design → Procurement → Construction → Commissioning → Operations' },
+            { name: 'DecisionVelocity', title: 'QC Decision Velocity', subtitle: 'NCR approvals, inspection sign-offs, and hold resolution speed' },
+            { name: 'ScheduleConfidence', title: 'Construction Schedule Confidence', subtitle: 'Planned vs Actual — Early warning for construction delays' },
+        ],
         okr: { objective: 'Deliver infrastructure with zero critical defects.', keyResults: ['NCR rate reduced by 30%', 'Rework below 2%', '100% inspection coverage'] },
         kpis: [
             { label: 'Inspection Pass Rate', value: '94%', target: '95%', trend: 'stable', measures: '% inspections passed first time', matters: 'Build-quality indicator' },
@@ -115,7 +126,13 @@ export const QPMO_SECTION_KPIS = {
         title: 'Project Performance',
         color: QPMO_COLORS.blue,
         description: 'Delivery efficiency & project governance',
-        charts: ['ScheduleConfidence', 'DecisionVelocity'],
+        aiInsight: 'SPI for WSLE has dropped below 1.0 for the second consecutive period. Cost performance remains strong at 1.02. AI model predicts 72% probability of schedule recovery if MEP coordination is resolved within 14 days.',
+        charts: [
+            { name: 'ScheduleConfidence', title: 'Schedule Confidence Index (S-Curve)', subtitle: 'Planned vs Actual progress — Early warning for schedule drift' },
+            { name: 'DecisionVelocity', title: 'Decision Velocity Dashboard', subtitle: 'Governance health — Pending vs Approved decisions over time' },
+            { name: 'DeliveryPipeline', title: 'Project Delivery Pipeline', subtitle: 'Identify where projects are stuck in the lifecycle' },
+            { name: 'CapitalPortfolioMap', title: 'Capital Portfolio Status', subtitle: 'Budget status, risk level, and completion % by program' },
+        ],
         okr: { objective: 'Deliver capital projects on time and on budget.', keyResults: ['SPI ≥ 1.0', 'CPI ≥ 1.0', 'Change orders reduced 20%'] },
         kpis: [
             { label: 'Schedule Performance Index (SPI)', value: '0.96', target: '≥ 1.0', trend: 'stable', measures: 'Schedule adherence', matters: 'Delivery efficiency' },
@@ -129,7 +146,12 @@ export const QPMO_SECTION_KPIS = {
         title: 'Business Continuity & Safety',
         color: QPMO_COLORS.purple,
         description: 'Resilience & safety',
-        charts: ['RiskHeatMap'],
+        aiInsight: 'Zero cybersecurity incidents maintained for 180+ days. Disaster Recovery drill scheduled for March 15 — current readiness score of 92/100 exceeds baseline. Safety incident rate trending 58% below industry benchmark.',
+        charts: [
+            { name: 'RiskHeatMap', title: 'Risk Heat Map', subtitle: 'Critical program threats (Probability × Impact)' },
+            { name: 'ProgramHealthRadar', title: 'Safety & Resilience Radar', subtitle: 'Multi-dimensional safety posture across all programs' },
+            { name: 'TaskThroughput', title: 'Safety Task Throughput', subtitle: 'Open vs Resolved safety actions — Compliance tracking' },
+        ],
         okr: { objective: 'Ensure uninterrupted transportation service.', keyResults: ['Emergency response time < 15 min', 'Zero major service interruptions', 'Resilience score > 90%'] },
         kpis: [
             { label: 'Safety Incident Rate', value: '0.42', target: '<1.0', trend: 'up', measures: 'Incidents per 200K work hours', matters: 'Workforce safety' },
@@ -143,7 +165,12 @@ export const QPMO_SECTION_KPIS = {
         title: 'Operations & Maintenance',
         color: QPMO_COLORS.orange,
         description: 'Asset lifecycle management',
-        charts: ['AssetLifecycle', 'ResourceCapacity', 'TaskThroughput'],
+        aiInsight: 'Predictive model flags Escalator Bank B for preventive maintenance within 7 days (MTBF pattern match 94%). Maintenance backlog stable at 18 items. Resource capacity utilization averaging 82% — optimal range.',
+        charts: [
+            { name: 'AssetLifecycle', title: 'Asset Lifecycle Dashboard', subtitle: 'Design → Installed → Tested → Commissioned → Operational' },
+            { name: 'ResourceCapacity', title: 'Resource Capacity Map', subtitle: 'Utilization across Engineers, Safety Officers, BIM leads' },
+            { name: 'TaskThroughput', title: 'Task Throughput Flow', subtitle: 'Kanban flow — Tasks Created vs Completed vs Backlog growth' },
+        ],
         okr: { objective: 'Maximize reliability of operational infrastructure.', keyResults: ['Asset availability > 99%', 'Maintenance backlog reduced 25%', 'Predictive maintenance coverage > 70%'] },
         kpis: [
             { label: 'Asset Availability', value: '97.5%', target: '>96%', trend: 'up', measures: '% time equipment operational', matters: 'Infrastructure reliability' },
@@ -157,7 +184,13 @@ export const QPMO_SECTION_KPIS = {
         title: 'QPMO Oversight & AI Intelligence',
         color: QPMO_COLORS.red,
         description: 'Strategic governance & AI analytics',
-        charts: ['ProgramHealthRadar', 'RiskHeatMap'],
+        aiInsight: 'Predictive Schedule Risk triggered for WSLE. A pattern of RFI delays in the Knowledge Hub correlates with an 8% chance of schedule slippage next month. Recommend escalating MEP coordination review. Portfolio Risk Index stable at 14.2 — within management threshold.',
+        charts: [
+            { name: 'ProgramHealthRadar', title: 'Program Health Radar', subtitle: 'Cross-program health — Safety, Quality, Schedule, Cost, Risk, Stakeholder' },
+            { name: 'RiskHeatMap', title: 'Enterprise Risk Heat Map', subtitle: 'Critical program threats (Probability × Impact) across all projects' },
+            { name: 'CapitalPortfolioMap', title: 'Strategic Portfolio Overview', subtitle: 'AI-recommended budget reallocation and risk-adjusted priorities' },
+            { name: 'ScheduleConfidence', title: 'Cross-Program Schedule Confidence', subtitle: 'Portfolio-wide planned vs actual — aggregate schedule health' },
+        ],
         okr: { objective: 'Enable data-driven leadership decisions.', keyResults: ['Predictive risk detection > 90%', 'Portfolio dashboard updated daily', 'AI insights adopted by leadership'] },
         kpis: [
             { label: 'Portfolio Risk Index', value: '14.2', target: '<15', trend: 'stable', measures: 'Overall risk across projects', matters: 'Executive awareness' },

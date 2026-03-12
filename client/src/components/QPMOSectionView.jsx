@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus, Target, Cpu, Info } from 'lucide-react';
 import { QPMO_SECTION_KPIS, QPMO_COLORS } from '../data/dashboardData';
 
-// Chart imports — lazy-loaded per section
+// Chart imports
 import ProgramHealthRadar from './charts/ProgramHealthRadar';
 import CapitalPortfolioMap from './charts/CapitalPortfolioMap';
 import DeliveryPipeline from './charts/DeliveryPipeline';
@@ -30,28 +30,25 @@ export default function QPMOSectionView({ sectionId }) {
     const section = QPMO_SECTION_KPIS[sectionId];
     if (!section) return <div className="p-10 text-center text-slate-500">Section not found</div>;
 
-    const { title, color, description, kpis, okr, charts } = section;
+    const { title, color, description, kpis, okr, charts, aiInsight } = section;
 
     return (
         <div className="space-y-6">
-            {/* AI Alert for QPMO Oversight */}
-            {sectionId === 'qpmo-oversight' && (
+            {/* ═══ AI PREDICTIVE ALERT ═══ */}
+            {aiInsight && (
                 <motion.div
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="rounded-2xl p-4 flex items-start gap-3"
                     style={{
-                        background: `linear-gradient(135deg, ${QPMO_COLORS.red.primary}12, ${QPMO_COLORS.red.primary}06)`,
-                        border: `1px solid ${QPMO_COLORS.red.primary}22`
+                        background: `linear-gradient(135deg, ${color.primary}12, ${color.primary}06)`,
+                        border: `1px solid ${color.primary}22`
                     }}
                 >
-                    <Cpu className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: QPMO_COLORS.red.primary }} />
+                    <Cpu className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: color.primary }} />
                     <div>
                         <p className="text-sm font-bold text-slate-800">AI Insight</p>
-                        <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                            Predictive Schedule Risk triggered for <strong>WSLE</strong>. A pattern of RFI delays in the Knowledge Hub
-                            correlates with an <strong>8% chance of schedule slippage</strong> next month. Recommend escalating MEP coordination review.
-                        </p>
+                        <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">{aiInsight}</p>
                     </div>
                 </motion.div>
             )}
@@ -99,7 +96,7 @@ export default function QPMOSectionView({ sectionId }) {
                             <span className="text-[10px] text-slate-400 font-semibold">Target: {kpi.target}</span>
                         </div>
 
-                        {/* What it measures & Why it matters — shown on hover */}
+                        {/* What it measures & Why it matters */}
                         <div className="border-t border-slate-100 pt-2.5 mt-auto">
                             <div className="flex items-start gap-1.5 mb-1">
                                 <Info className="w-3 h-3 mt-0.5 flex-shrink-0 text-slate-300" />
@@ -139,25 +136,33 @@ export default function QPMOSectionView({ sectionId }) {
                 </div>
             </motion.div>
 
-            {/* ═══ CHARTS GRID ═══ */}
+            {/* ═══ CHARTS GRID (3-4 charts per section) ═══ */}
             {charts && charts.length > 0 && (
                 <div className={`grid grid-cols-1 ${charts.length >= 2 ? 'lg:grid-cols-2' : ''} gap-6`}>
-                    {charts.map((chartName, i) => {
+                    {charts.map((chart, i) => {
+                        // Support both old string format and new object format
+                        const chartName = typeof chart === 'string' ? chart : chart.name;
+                        const chartTitle = typeof chart === 'string' ? chart.replace(/([A-Z])/g, ' $1').trim() : chart.title;
+                        const chartSubtitle = typeof chart === 'string' ? null : chart.subtitle;
                         const ChartComponent = chartComponents[chartName];
                         if (!ChartComponent) return null;
                         return (
                             <motion.div
-                                key={chartName}
+                                key={chartName + '-' + i}
                                 initial={{ opacity: 0, y: 15 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.35 + i * 0.1 }}
                                 className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6"
                                 style={{ boxShadow: '0 8px 30px rgb(0,0,0,0.04)' }}
                             >
-                                <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-semibold text-slate-700 mb-1 flex items-center gap-2">
                                     <div className="w-1.5 h-5 rounded-full" style={{ background: color.primary }} />
-                                    {chartName.replace(/([A-Z])/g, ' $1').trim()}
+                                    {chartTitle}
                                 </h3>
+                                {chartSubtitle && (
+                                    <p className="text-xs text-slate-400 mb-4 ml-[18px]">{chartSubtitle}</p>
+                                )}
+                                {!chartSubtitle && <div className="mb-3" />}
                                 <ChartComponent />
                             </motion.div>
                         );
