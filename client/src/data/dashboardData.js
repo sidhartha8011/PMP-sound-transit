@@ -123,6 +123,22 @@ export const QPMO_SECTION_KPIS = {
             { time: '1d ago', event: 'Track Section 4 vibration sensors calibrated', type: 'info', by: 'Kevin O\'Brien' },
         ],
         okr: { objective: 'Improve operational readiness of new infrastructure.', keyResults: ['Commissioning readiness > 95%', 'Service reliability > 98%', 'Energy efficiency improved 10%'] },
+        insights: {
+            recurringIssues: [
+                { text: 'HVAC control system integration issues across Stations 2–4', severity: 'warning' },
+                { text: 'Elevator commissioning delays due to manufacturer lead times', severity: 'info' },
+                { text: 'Passenger information display outages at 3 stations — firmware issue', severity: 'warning' },
+            ],
+            emergingRisks: [
+                { text: 'Fire alarm integration testing reveals compatibility issue with legacy systems', severity: 'danger' },
+                { text: 'Predictive model indicates HVAC compressor failure within 60 days at Station 3', severity: 'danger' },
+            ],
+            crossPhaseSignals: [
+                { text: 'Construction punch list items impacting commissioning schedule for Station 3', from: 'Construction Quality' },
+                { text: 'O&M requesting training schedule alignment with commissioning milestones', from: 'O&M' },
+                { text: 'QPMO flagging energy monitoring software licensing gap', from: 'QPMO Oversight' },
+            ],
+        },
         kpis: [
             { label: 'System Availability', value: '99.2%', target: '99%', trend: 'up', measures: '% of rail system operational uptime', matters: 'Measures network reliability' },
             { label: 'On-Time Performance', value: '96.5%', target: '95%', trend: 'up', measures: '% trains arriving on schedule', matters: 'Key rider service metric' },
@@ -170,6 +186,22 @@ export const QPMO_SECTION_KPIS = {
             { time: '1d ago', event: 'Fire suppression system inspection passed — Level B2', type: 'success', by: 'Diana Park' },
         ],
         okr: { objective: 'Deliver infrastructure with zero critical defects.', keyResults: ['NCR rate reduced by 30%', 'Rework below 2%', '100% inspection coverage'] },
+        insights: {
+            recurringIssues: [
+                { text: 'Concrete batch plant temperature deviations in early morning pours — 3rd month', severity: 'warning' },
+                { text: 'Welding inspection backlog on Track Segment 4 growing', severity: 'info' },
+                { text: 'NCR closure lagging for Systems trade — investigate process bottleneck', severity: 'warning' },
+            ],
+            emergingRisks: [
+                { text: 'Rework rate trending up for Systems trade — root cause needed', severity: 'warning' },
+                { text: 'New NCR on waterproofing membrane at Station 3 platform level', severity: 'danger' },
+            ],
+            crossPhaseSignals: [
+                { text: 'Design revisions on MEP shaft sizes pending — delays field coordination', from: 'Design Quality' },
+                { text: 'Commissioning team needs early access to completed sections for testing', from: 'Facility Excellence' },
+                { text: 'O&M requesting as-built documentation updates for Track Section 4', from: 'O&M' },
+            ],
+        },
         kpis: [
             { label: 'Inspection Pass Rate', value: '94%', target: '95%', trend: 'stable', measures: '% inspections passed first time', matters: 'Build-quality indicator' },
             { label: 'NCR Rate', value: '2.4/project', target: '<3', trend: 'up', measures: 'Non-conformance reports per project', matters: 'Defect detection' },
@@ -218,6 +250,22 @@ export const QPMO_SECTION_KPIS = {
             { time: '1d ago', event: 'ELE commissioning readiness review passed (91% complete)', type: 'success', by: 'Diana Park' },
         ],
         okr: { objective: 'Deliver capital projects on time and on budget.', keyResults: ['SPI ≥ 1.0', 'CPI ≥ 1.0', 'Change orders reduced 20%'] },
+        insights: {
+            recurringIssues: [
+                { text: 'WSLE schedule slippage continues — SPI below 1.0 for 3rd consecutive period', severity: 'warning' },
+                { text: 'Procurement cycle times exceeding targets for MEP packages', severity: 'info' },
+                { text: 'Change order volume increasing on NLX due to soil conditions', severity: 'warning' },
+            ],
+            emergingRisks: [
+                { text: 'FTA compliance gap detected — risk of funding delay if not resolved by Q2', severity: 'danger' },
+                { text: 'Material cost escalation may push CPI below 1.0 on TDLE by Q3', severity: 'warning' },
+            ],
+            crossPhaseSignals: [
+                { text: 'Construction delays on NLX propagating to commissioning timeline', from: 'Construction Quality' },
+                { text: 'Facility team flagging incomplete design packages for Station B2', from: 'Facility Excellence' },
+                { text: 'QPMO AI model predicts 72% probability of WSLE schedule recovery if MEP resolved in 14 days', from: 'QPMO Oversight' },
+            ],
+        },
         kpis: [
             { label: 'Schedule Performance Index (SPI)', value: '0.96', target: '≥ 1.0', trend: 'stable', measures: 'Schedule adherence', matters: 'Delivery efficiency' },
             { label: 'Cost Performance Index (CPI)', value: '1.02', target: '≥ 1.0', trend: 'up', measures: 'Budget performance', matters: 'Financial control' },
@@ -265,6 +313,22 @@ export const QPMO_SECTION_KPIS = {
             { time: '2d ago', event: 'Business continuity plan updated for extreme weather protocols', type: 'info', by: 'Patricia Foster' },
         ],
         okr: { objective: 'Ensure uninterrupted transportation service.', keyResults: ['Emergency response time < 15 min', 'Zero major service interruptions', 'Resilience score > 90%'] },
+        insights: {
+            recurringIssues: [
+                { text: 'Emergency exit signage battery replacements overdue at 4 stations', severity: 'warning' },
+                { text: 'Seismic sensor false positives increasing in Track Sections 2–5', severity: 'info' },
+                { text: 'Safety training attendance below 90% threshold for Q1', severity: 'warning' },
+            ],
+            emergingRisks: [
+                { text: 'Severe weather forecast — potential flood risk to tunnel ventilation systems', severity: 'danger' },
+                { text: 'Third-party cybersecurity audit reveals firmware vulnerability in SCADA systems', severity: 'danger' },
+            ],
+            crossPhaseSignals: [
+                { text: 'Construction site evacuation routes need updating as TDLE Phase 3 begins', from: 'Construction Quality' },
+                { text: 'O&M requesting emergency power failover testing during commissioning window', from: 'O&M' },
+                { text: 'Design team needs to finalize fire suppression specs for new tunnel sections', from: 'Design Quality' },
+            ],
+        },
         kpis: [
             { label: 'Safety Incident Rate', value: '0.42', target: '<1.0', trend: 'up', measures: 'Incidents per 200K work hours', matters: 'Workforce safety' },
             { label: 'Emergency Response Time', value: '12 min', target: '<15 min', trend: 'up', measures: 'Response to operational disruptions', matters: 'Service resilience' },
@@ -312,6 +376,22 @@ export const QPMO_SECTION_KPIS = {
             { time: '1d ago', event: 'Monthly asset health report generated — 97.5% availability', type: 'info', by: 'System' },
         ],
         okr: { objective: 'Maximize reliability of operational infrastructure.', keyResults: ['Asset availability > 99%', 'Maintenance backlog reduced 25%', 'Predictive maintenance coverage > 70%'] },
+        insights: {
+            recurringIssues: [
+                { text: 'Escalator #3 at Station 2 recurring mechanical fault — 4th incident this quarter', severity: 'warning' },
+                { text: 'HVAC filter replacement schedule lagging in underground stations', severity: 'info' },
+                { text: 'Signal system firmware updates deferred 3 times due to scheduling conflicts', severity: 'warning' },
+            ],
+            emergingRisks: [
+                { text: 'Spare parts inventory for signal systems approaching critical minimum', severity: 'danger' },
+                { text: 'Vendor contract renewal for elevator maintenance due in 60 days — no bid received', severity: 'warning' },
+            ],
+            crossPhaseSignals: [
+                { text: 'Facility commissioning handover documents incomplete for Station 2 systems', from: 'Facility Excellence' },
+                { text: 'Design team clarification needed on maintenance access routes for tunnel fans', from: 'Design Quality' },
+                { text: 'Construction as-built documentation gaps delaying maintenance SOP development', from: 'Construction Quality' },
+            ],
+        },
         kpis: [
             { label: 'Asset Availability', value: '97.5%', target: '>96%', trend: 'up', measures: '% time equipment operational', matters: 'Infrastructure reliability' },
             { label: 'Mean Time Between Failures', value: '42 days', target: '>30d', trend: 'up', measures: 'Time between system failures', matters: 'Asset health' },
@@ -360,6 +440,22 @@ export const QPMO_SECTION_KPIS = {
             { time: '1d ago', event: 'Strategic priority realignment approved — NLX elevated to Priority 2', type: 'success', by: 'Executive Team' },
         ],
         okr: { objective: 'Enable data-driven leadership decisions.', keyResults: ['Predictive risk detection > 90%', 'Portfolio dashboard updated daily', 'AI insights adopted by leadership'] },
+        insights: {
+            recurringIssues: [
+                { text: 'Cross-program data discrepancies between PMIS and BIM models persist', severity: 'warning' },
+                { text: 'Executive report generation requires manual intervention despite automation', severity: 'info' },
+                { text: 'AI prediction confidence drops below 85% for programs with incomplete data', severity: 'warning' },
+            ],
+            emergingRisks: [
+                { text: 'Portfolio risk index approaching $150M threshold — 2 programs driving increase', severity: 'danger' },
+                { text: 'Board requesting real-time ESG metrics not yet integrated into dashboards', severity: 'warning' },
+            ],
+            crossPhaseSignals: [
+                { text: 'Construction flagging data latency issues — field data 48hrs behind dashboard', from: 'Construction Quality' },
+                { text: 'Facility Excellence requesting AI-driven commissioning predictions', from: 'Facility Excellence' },
+                { text: 'O&M predictive maintenance models need integration into enterprise risk view', from: 'O&M' },
+            ],
+        },
         kpis: [
             { label: 'Portfolio Risk Index', value: '14.2', target: '<15', trend: 'stable', measures: 'Overall risk across projects', matters: 'Executive awareness' },
             { label: 'Governance Compliance Score', value: '94%', target: '>90%', trend: 'up', measures: 'Audit & process compliance', matters: 'Organizational maturity' },

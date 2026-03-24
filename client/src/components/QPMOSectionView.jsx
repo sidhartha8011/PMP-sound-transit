@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Minus, Target, Cpu, Info, Clock, CheckCircle2, AlertTriangle, ArrowUpRight, ArrowDownRight, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Target, Cpu, Info, Clock, CheckCircle2, AlertTriangle, ArrowUpRight, ArrowDownRight, Activity, ArrowRight } from 'lucide-react';
 import { QPMO_SECTION_KPIS } from '../data/dashboardData';
 
 // Chart imports
@@ -38,11 +38,17 @@ const activityIcon = (type) => {
     return <Activity className="w-3.5 h-3.5 text-blue-500 flex-shrink-0 mt-0.5" />;
 };
 
+const severityStyles = {
+    danger: { bg: 'bg-red-50', border: 'border-red-200', icon: AlertTriangle, iconColor: 'text-red-500', text: 'text-red-800' },
+    warning: { bg: 'bg-amber-50', border: 'border-amber-200', icon: AlertTriangle, iconColor: 'text-amber-500', text: 'text-amber-800' },
+    info: { bg: 'bg-blue-50', border: 'border-blue-200', icon: Info, iconColor: 'text-blue-500', text: 'text-blue-800' },
+};
+
 export default function QPMOSectionView({ sectionId }) {
     const section = QPMO_SECTION_KPIS[sectionId];
     if (!section) return <div className="p-10 text-center text-slate-500">Section not found</div>;
 
-    const { title, color, description, kpis, okr, charts, aiInsight, summaryStats, progressMetrics, projectHealth, recentActivity } = section;
+    const { title, color, description, kpis, okr, charts, aiInsight, summaryStats, progressMetrics, projectHealth, recentActivity, insights } = section;
 
     return (
         <div className="space-y-6">
@@ -344,6 +350,97 @@ export default function QPMOSectionView({ sectionId }) {
                         );
                     })}
                 </div>
+            )}
+
+            {/* ═══ INSIGHT & SIGNAL AREA (Bottom 3 Boxes) ═══ */}
+            {insights && (
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.55 }}
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-5"
+                >
+                    {/* Recurring Issues */}
+                    <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6" style={{ boxShadow: '0 8px 30px rgb(0,0,0,0.04)' }}>
+                        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                            Recurring Issues
+                        </h3>
+                        <div className="space-y-2.5">
+                            {insights.recurringIssues.map((item, i) => {
+                                const s = severityStyles[item.severity] || severityStyles.info;
+                                return (
+                                    <motion.div key={i} initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + i * 0.06 }} className={`p-3.5 rounded-xl ${s.bg} border ${s.border}`}>
+                                        <div className="flex items-start gap-2">
+                                            <s.icon className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${s.iconColor}`} />
+                                            <p className={`text-xs leading-relaxed ${s.text}`}>{item.text}</p>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Emerging Risks */}
+                    <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6" style={{ boxShadow: '0 8px 30px rgb(0,0,0,0.04)' }}>
+                        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                            <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
+                            Emerging Risks
+                        </h3>
+                        <div className="space-y-2.5">
+                            {insights.emergingRisks.map((item, i) => {
+                                const s = severityStyles[item.severity] || severityStyles.info;
+                                return (
+                                    <motion.div key={i} initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + i * 0.06 }} className={`p-3.5 rounded-xl ${s.bg} border ${s.border}`}>
+                                        <div className="flex items-start gap-2">
+                                            <s.icon className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${s.iconColor}`} />
+                                            <p className={`text-xs leading-relaxed ${s.text}`}>{item.text}</p>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Cross-Phase Signals */}
+                    <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl p-6" style={{ boxShadow: '0 8px 30px rgb(0,0,0,0.04)' }}>
+                        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+                            <ArrowRight className="w-3.5 h-3.5" style={{ color: color.primary }} />
+                            Cross-Phase Signals
+                        </h3>
+                        <div className="space-y-2.5">
+                            {insights.crossPhaseSignals.map((item, i) => (
+                                <motion.div key={i} initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 + i * 0.06 }} className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                                    <p className="text-xs text-slate-600 leading-relaxed mb-1.5">{item.text}</p>
+                                    <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: color.primary }}>From: {item.from}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+
+            {/* ═══ AI PREDICTIVE INSIGHT (Bottom) ═══ */}
+            {aiInsight && (
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.65 }}
+                    className="rounded-2xl p-5 flex items-start gap-4"
+                    style={{
+                        background: `linear-gradient(135deg, ${color.primary}12, ${color.primary}06)`,
+                        border: `1px solid ${color.primary}22`,
+                        boxShadow: '0 8px 30px rgb(0,0,0,0.04)',
+                    }}
+                >
+                    <div className="p-2 rounded-xl flex-shrink-0" style={{ background: color.primary + '18' }}>
+                        <Cpu className="w-5 h-5" style={{ color: color.primary }} />
+                    </div>
+                    <div>
+                        <p className="text-sm font-bold text-slate-800 mb-1">AI Predictive Insight</p>
+                        <p className="text-xs text-slate-600 leading-relaxed">{aiInsight}</p>
+                    </div>
+                </motion.div>
             )}
         </div>
     );
